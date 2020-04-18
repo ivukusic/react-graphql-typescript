@@ -1,0 +1,24 @@
+.pagination {
+  .pagination__pages {
+    font-size: 0.8rem;
+    padding: 0.65em 0.6em 0;
+  }
+
+  .pagination__arrow {
+    cursor: pointer;
+    padding: 0.4em 0.2em;
+    &.disabled {
+      opacity: 0.4;
+    }
+  }
+  .pagination__arrow--first {
+    svg:first-of-type {
+      margin-right: -15px;
+    }
+  }
+  .pagination__arrow--last {
+    svg:last-of-type {
+      margin-left: -15px;
+    }
+  }
+}

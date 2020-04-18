@@ -1,0 +1,46 @@
+.dropdown {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+  align-items: center;
+  border: 1px solid #bababa;
+  font-size: 0.9em;
+  padding: 0.6em 1em 0.8em;
+  min-width: 140px;
+  position: relative;
+  cursor: pointer;
+
+  svg {
+    margin-top: 0.2rem;
+  }
+
+  ul {
+    position: absolute;
+    top: calc(100% + 1px);
+    left: -1px;
+    right: -1px;
+    list-style: none;
+    background-color: white;
+    border: 1px solid #bababa;
+    border-top: none;
+    padding: 0;
+    opacity: 0;
+
+    &.opened {
+      opacity: 1;
+    }
+    li {
+      padding: 0.6em 1em;
+      border-bottom: 1px solid #cacaca;
+      text-align: center;
+
+      &:last-of-type {
+        border-bottom: none;
+      }
+
+      &:hover {
+        background-color: #fafafa;
+      }
+    }
+  }
+}

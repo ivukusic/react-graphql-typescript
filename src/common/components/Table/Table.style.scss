@@ -1,0 +1,35 @@
+.table {
+  h4 {
+    font-weight: bold;
+  }
+  table {
+    font-size: 0.8em;
+    thead {
+      tr {
+        th {
+          border-top: none;
+          border-bottom: none !important;
+
+          &:nth-of-type(2) {
+            width: 50%;
+          }
+        }
+      }
+    }
+    tbody {
+      tr {
+        td {
+          border-top: 1px dotted #fafafa !important;
+          border-bottom: none;
+        }
+      }
+    }
+  }
+  .table__items-per-page {
+    font-size: 0.8em;
+  }
+}
+
+.dropdown--items-per-page {
+  min-width: 80px !important;
+}
