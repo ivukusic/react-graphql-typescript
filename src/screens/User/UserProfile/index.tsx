@@ -2,6 +2,7 @@ import React, { useState, ChangeEvent } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { AiOutlineUser } from 'react-icons/ai';
 
+import Card from '../../../common/components/Card';
 import TextField from '../../../common/components/FormElements/TextField';
 
 import './UserProfile.style.scss';
@@ -26,15 +27,13 @@ export const UserProfile = (): JSX.Element => {
     setForm({ ...form, [field]: e.target.value });
   };
 
-  const onSave = () => {
-    console.log('SAVE');
-  };
+  const onSave = () => {};
 
   return (
     <Container fluid>
       <Row>
         <Col lg={3} md={8}>
-          <div className="user-profile card mb-4">
+          <Card className="user-profile mb-4">
             <div className="user-profile__header"></div>
             <div className="user-profile__image">
               <AiOutlineUser size={40} color="darkgray" />
@@ -44,10 +43,10 @@ export const UserProfile = (): JSX.Element => {
               <p>@ivukusic</p>
               <p className="quote">"I like the way you work it No diggity I wanna bag it up"</p>
             </div>
-          </div>
+          </Card>
         </Col>
         <Col lg={9} md={12}>
-          <div className="card edit-profile">
+          <Card className="edit-profile">
             <h4>Edit profile</h4>
             <Container fluid>
               <Row>
@@ -117,7 +116,7 @@ export const UserProfile = (): JSX.Element => {
             <div>
               <Button label="Save" onClick={onSave} />
             </div>
-          </div>
+          </Card>
         </Col>
       </Row>
     </Container>

@@ -1,7 +1,8 @@
 import * as React from 'react';
 
-import Pagination from '../Pagination';
+import Card from '../Card';
 import Dropdown from '../FormElements/Dropdown';
+import Pagination from '../Pagination';
 
 import './Table.style.scss';
 
@@ -38,7 +39,7 @@ export const Table = ({
   setItemsPerPage,
   totalCount,
 }: Props): JSX.Element => (
-  <div className="table card p-2 pt-3 pb-3 w-100">
+  <Card className="table p-2 pt-3 pb-3 w-100">
     <h4 className="pl-2">{name}</h4>
     <table className="w-100">
       <thead>
@@ -76,7 +77,7 @@ export const Table = ({
         totalCount={totalCount}
       />
     </div>
-  </div>
+  </Card>
 );
 
 export default Table;

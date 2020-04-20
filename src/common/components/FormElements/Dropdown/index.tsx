@@ -32,7 +32,7 @@ export const Dropdown = ({ className, onSelect, placeholderClassName, value }: P
       <MdKeyboardArrowDown size={14} color="#323232" />
 
       <ul className={`${opened ? 'opened' : ''}`}>
-        {[2, 5, 10].map(item => (
+        {[5, 10, 25].map(item => (
           <li key={item} onClick={onSelectValue(item)}>
             {item}
           </li>

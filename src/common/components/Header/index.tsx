@@ -5,17 +5,24 @@ import MenuIcon from '../MenuIcon';
 import Search from '../Search';
 
 import './Header.style.scss';
-import routes from '../../../core/Routes';
+import { resetLocalStateUser } from '../../apollo/mutation/localState';
 
 interface Props extends RouteComponentProps {
   title: string;
+  routes: any;
+  user: any;
 }
 
-const Header = ({ history, title }: Props): JSX.Element => {
+const Header = ({ history, routes, title }: Props): JSX.Element => {
   const [searchText, setSearchText] = useState('');
 
   const onChangeText = (text: string) => {
     setSearchText(text);
+  };
+
+  const logout = () => {
+    resetLocalStateUser();
+    history.replace('/login');
   };
 
   let t = title;
@@ -24,12 +31,12 @@ const Header = ({ history, title }: Props): JSX.Element => {
     let r = {
       name: '',
     };
-    routes.forEach(route => {
+    routes.forEach((route: any) => {
       if (route.menu) {
         if (route.path === pathName) {
           r = route;
         }
-        route.menu.forEach(child => {
+        route.menu.forEach((child: any) => {
           if (child.path === pathName) {
             r = child;
           }
@@ -45,7 +52,7 @@ const Header = ({ history, title }: Props): JSX.Element => {
       <h4>{t}</h4>
       <div className="d-flex flex-row align-items-center">
         <Search className="mr-3" onChangeText={onChangeText} value={searchText} />
-        <MenuIcon />
+        <MenuIcon logout={logout} />
       </div>
     </div>
   );

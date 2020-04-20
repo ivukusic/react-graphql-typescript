@@ -15,6 +15,11 @@
     justify-content: center;
     a {
       color: #f2c300;
+
+      .sidebar__logo {
+        width: 100px;
+        height: auto;
+      }
     }
 
     &:after {

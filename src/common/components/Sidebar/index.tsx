@@ -2,6 +2,8 @@ import React, { useState, SyntheticEvent } from 'react';
 import { AiOutlineBank, AiOutlineUser, AiOutlinePushpin } from 'react-icons/ai';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
 
+import logo from '../../../resources/images/NORDIT - logo_white.png';
+
 import './Sidebar.style.scss';
 
 interface Props extends RouteComponentProps {
@@ -37,9 +39,8 @@ const SidebarComponent = ({ history, routes, updateTitle }: Props): JSX.Element 
     <div className="sidebar">
       <div className="logo">
         <a href="https://nordit.co/" className="">
-          <div className="logo-img" />
+          <img className="sidebar__logo" src={logo} alt="NORDIT" />
         </a>
-        <a href="https://nordit.co/">NORDIT</a>
       </div>
       <div className="sidebar-wrapper">
         <nav>

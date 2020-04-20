@@ -1,0 +1,66 @@
+.login {
+  padding-top: 4em;
+  opacity: 0;
+  transform: translateY(30px);
+  transition: all 0.4s ease-in;
+
+  &.visible {
+    opacity: 1;
+    transform: translateY(0);
+  }
+
+  .login__form {
+    width: 800px;
+    max-width: 98%;
+    padding: 3em 2em 4em 0.2em;
+  }
+
+  .login__left {
+    border-right: 1px solid #f2f2f2;
+    margin-top: 3em;
+    padding: 0em 2em 4em 2em;
+
+    .login__logo {
+      width: auto;
+      height: 80px;
+    }
+    .social-login {
+      font-size: 0.8em;
+    }
+  }
+  .login__right {
+    padding: 0em 1em 0em 3em;
+
+    h4 {
+      font-size: 1.1em;
+      font-weight: bolder;
+      text-transform: uppercase;
+      margin-bottom: 2em;
+    }
+  }
+}
+
+.social-icon {
+  background-color: lightgray;
+  border-radius: 6px;
+  margin-right: 0.4em;
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  cursor: pointer;
+
+  svg {
+    fill: white;
+  }
+  &.social-icon--facebook {
+    background-color: #4267b2;
+  }
+  &.social-icon--twitter {
+    background-color: #1da1f2;
+  }
+  &.social-icon--google {
+    background-color: #dd4b39;
+  }
+}
