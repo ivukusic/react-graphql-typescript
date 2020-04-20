@@ -27,7 +27,7 @@ export default function App() {
       <Router>
         <div className="d-flex flex-row">
           <Sidebar routes={routes} updateTitle={updateTitle} />
-          <div className="container-fluid p-0">
+          <div className="container-fluid content p-0">
             <Header title={title} />
 
             <div className="p-4">

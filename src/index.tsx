@@ -8,7 +8,7 @@ import * as serviceWorker from './serviceWorker';
 import client from './core/Apollo';
 
 import 'bootstrap/scss/bootstrap.scss';
-import './index.css';
+import './index.scss';
 
 ReactDOM.render(
   <React.StrictMode>

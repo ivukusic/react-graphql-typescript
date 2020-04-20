@@ -42,7 +42,7 @@ const Header = ({ history, title }: Props): JSX.Element => {
   }
   return (
     <div className="header d-flex flex-row align-items-center justify-content-between pl-4 pr-4">
-      <h2>{t}</h2>
+      <h4>{t}</h4>
       <div className="d-flex flex-row align-items-center">
         <Search className="mr-3" onChangeText={onChangeText} value={searchText} />
         <MenuIcon />

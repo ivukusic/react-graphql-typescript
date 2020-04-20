@@ -1,0 +1,22 @@
+.text-field {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.6em;
+
+  label {
+    width: 100%;
+    font-size: 0.8em;
+    margin-bottom: 2px;
+    opacity: 0.8;
+  }
+  input {
+    outline: none;
+    border: 1px solid #e3e3e3;
+    border-radius: 6px;
+    padding: 0.6em 1em;
+
+    &.disabled {
+      background-color: #e3e3e3;
+    }
+  }
+}

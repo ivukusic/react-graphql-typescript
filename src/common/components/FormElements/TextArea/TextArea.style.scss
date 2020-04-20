@@ -1,0 +1,23 @@
+.textarea {
+  display: flex;
+  flex-direction: column;
+  margin-bottom: 1.6em;
+
+  label {
+    width: 100%;
+    font-size: 0.8em;
+    margin-bottom: 2px;
+    opacity: 0.8;
+  }
+  textarea {
+    outline: none;
+    border: 1px solid #e3e3e3;
+    border-radius: 6px;
+    padding: 0.6em 1em;
+    min-height: 100px;
+
+    &.disabled {
+      background-color: #e3e3e3;
+    }
+  }
+}

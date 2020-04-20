@@ -35,14 +35,25 @@ h3 {
   font-size: 1.4rem;
 }
 h4 {
-  font-size: 1.2rem;
+  font-size: 1.3rem;
+}
+
+.content {
+  height: 100vh;
+  overflow: auto;
 }
 
 .card {
   background-color: white;
   border-radius: 20px;
   border: none;
-  -webkit-box-shadow: 2px 2px 4px 2px rgba(153, 153, 153, 0.2);
-  -moz-box-shadow: 2px 2px 4px 2px rgba(153, 153, 153, 0.2);
-  box-shadow: 2px 2px 4px 2px rgba(153, 153, 153, 0.2);
+  font-family: 'Montserrat', sans-serif;
+  font-weight: lighter;
+  -webkit-box-shadow: 2px 2px 6px 2px rgba(153, 153, 153, 0.3);
+  -moz-box-shadow: 2px 2px 6px 2px rgba(153, 153, 153, 0.3);
+  box-shadow: 2px 2px 6px 2px rgba(153, 153, 153, 0.3);
+
+  h4 {
+    padding-bottom: 0.8em;
+  }
 }
