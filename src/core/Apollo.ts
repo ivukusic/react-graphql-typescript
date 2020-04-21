@@ -1,11 +1,18 @@
 import ApolloClient from 'apollo-boost';
 
-import { getStorageItem, removeStorageItem, setStorageItem } from '../common/utils/storage';
+import { getStorageItem, removeStorageItem, setStorageItem } from '../common/utils/Storage';
 import { IDENTIFIERS } from '../common/constants/Identifiers';
 
 export const INITIAL_USER = {
   id: null,
   email: '',
+  firstName: '',
+  lastName: '',
+  company: '',
+  address: '',
+  city: '',
+  postalCode: '',
+  country: '',
   role: '',
   __typename: 'User',
 };

@@ -17,7 +17,7 @@ export const Button = ({ disabled, label, loading, onClick }: Props) => (
   </button>
 );
 
-Button.defaultPros = {
+Button.defaultProps = {
   disabled: false,
   loading: false,
 };

@@ -138,3 +138,19 @@
     }
   }
 }
+
+@media screen and (max-width: 768px) {
+  .sidebar {
+    position: fixed;
+    top: 0;
+    left: 0;
+    bottom: 0;
+    z-index: 10000;
+    transform: translateX(-100%);
+    transition: all 0.3s ease-in-out;
+
+    &.opened {
+      transform: translateX(0);
+    }
+  }
+}

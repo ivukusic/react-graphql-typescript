@@ -8,10 +8,13 @@ import TextField from '../../common/components/FormElements/TextField';
 import logo from '../../resources/images/NORDIT - logo.png';
 
 import './Login.style.scss';
-import { MUTATION_LOGIN } from './Login.mutation';
+import { MUTATION_LOGIN } from './Login.gql';
 import { withRouter, RouteComponentProps } from 'react-router-dom';
 import routes from '../../core/Routes';
-import { createLocalStateUser } from '../../common/apollo/mutation/localState';
+import { createLocalStateUser } from '../../common/utils/LocalState';
+import { INITIAL_TEXT_FIELD } from '../../common/constants/CommonConstants';
+import { Validators } from '../../common/utils/Validators';
+import { validateForm, checkValidity } from '../../common/utils/Validation';
 
 interface Props extends RouteComponentProps {
   showSidebar: () => void;
@@ -22,7 +25,30 @@ interface Props extends RouteComponentProps {
 export const Login = ({ history, showSidebar, setUser, updateTitle }: Props): JSX.Element => {
   const ROUTES = routes('');
 
-  const [form, setForm] = useState({ email: 'user@test.com', password: 'password' });
+  const [error, setError] = useState('');
+  const [form, setForm] = useState<Record<string, any>>({
+    email: {
+      ...INITIAL_TEXT_FIELD,
+      field: 'email',
+      label: 'Email',
+      type: 'email',
+      required: true,
+      validators: [
+        { check: Validators.required, message: 'Field required' },
+        { check: Validators.email, message: 'Invalid email address' },
+      ],
+      value: 'info@nordit.c',
+    },
+    password: {
+      ...INITIAL_TEXT_FIELD,
+      field: 'password',
+      label: 'Password',
+      type: 'password',
+      required: true,
+      validators: [{ check: Validators.required, message: 'Field required' }],
+      value: 'password',
+    },
+  });
   const [loading, setLoading] = useState(false);
   const [visible, setVisible] = useState(false);
 
@@ -33,24 +59,60 @@ export const Login = ({ history, showSidebar, setUser, updateTitle }: Props): JS
   };
 
   const onChange = (field: string) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    setForm({ ...form, [field]: e.target.value });
+    let error = form[field].error;
+    if (error) {
+      error = checkValidity(form[field].validators, e.target.value).error;
+    }
+    setForm({ ...form, [field]: { ...form[field], error, value: e.target.value } });
   };
 
   const onLogin = async () => {
-    setLoading(true);
-    try {
-      const { data }: any = await login({ variables: { data: form } });
-      const user = { id: data.login.id, role: data.login.role, email: data.login.email };
-      createLocalStateUser(user);
-      showSidebar();
-      history.replace('/dashboard');
-      updateTitle(ROUTES[0].name);
-      setUser(user);
-      setLoading(false);
-    } catch (e) {
+    const valid = validateForm(Object.keys(form), form);
+    if (!valid.isValid) {
+      setForm(valid.newState);
+    } else {
+      setLoading(true);
+      try {
+        const { data }: any = await login({
+          variables: { data: { email: form.email.value, password: form.password.value } },
+        });
+        const user = { ...data.login };
+        delete user.jwt;
+        createLocalStateUser(user, data.login.jwt);
+        showSidebar();
+        history.replace('/dashboard');
+        updateTitle(ROUTES[0].name);
+        setUser(user);
+      } catch ({ graphQLErrors }) {
+        if (graphQLErrors && graphQLErrors[0] && graphQLErrors[0].message) {
+          setErrorMessage(graphQLErrors[0].message);
+        } else {
+          setErrorMessage("Something went wrong. Maybe it's your internet connection");
+        }
+      }
       setLoading(false);
     }
   };
+
+  const setErrorMessage = (message: string) => {
+    setError(message);
+    setTimeout(() => {
+      setError('');
+    }, 5000);
+  };
+
+  const renderTextField = (field: string) => (
+    <TextField
+      disabled={form[field].disabled}
+      error={form[field].error && form[field].error.error ? form[field].error.message : ''}
+      field={form[field].field}
+      type={form[field].type}
+      label={form[field].label}
+      required={form[field].required}
+      onChange={onChange(field)}
+      value={form[field].value}
+    />
+  );
 
   return (
     <div
@@ -77,14 +139,9 @@ export const Login = ({ history, showSidebar, setUser, updateTitle }: Props): JS
         </div>
         <div className="login__right d-flex flex-column w-100">
           <h4>login</h4>
-          <TextField label="Email" field="email" onChange={onChange('email')} value={form.email} />
-          <TextField
-            label="Password"
-            field="password"
-            type="password"
-            onChange={onChange('password')}
-            value={form.password}
-          />
+          {renderTextField('email')}
+          {renderTextField('password')}
+          {error && <div className="error-message mb-4">{error}</div>}
           <div className="d-flex flex-column align-items-start justify-content-center">
             <Button label="Login" onClick={onLogin} loading={loading} />
           </div>

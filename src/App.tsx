@@ -15,7 +15,7 @@ import UserProfile from './screens/User/UserProfile';
 import routes from './core/Routes';
 import Header from './common/components/Header';
 import Sidebar from './common/components/Sidebar';
-import { QUERY_CURRENT_USER } from './common/apollo/query/user';
+import { QUERY_CURRENT_USER } from './common/apollo/query/user.gql';
 
 export const MenuContext = React.createContext({ title: 'Dashboard', showSidebar: () => {} });
 
@@ -24,6 +24,7 @@ ApolloWrapper.initialize();
 export default function App() {
   const [title, setTitle] = useState('');
   const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [sidebarOpened, setSidebarOpened] = useState(false);
   const [currentUser, setCurrentUser] = useState<any>({});
 
   useEffect(() => {
@@ -54,6 +55,10 @@ export default function App() {
     setCurrentUser(user);
   };
 
+  const openSidebar = () => {
+    setSidebarOpened(!sidebarOpened);
+  };
+
   const showSidebar = () => {
     setSidebarVisible(!sidebarVisible);
   };
@@ -68,9 +73,11 @@ export default function App() {
         <MenuContext.Provider value={{ title, showSidebar }}>
           <Router>
             <div className="d-flex flex-row">
-              {sidebarVisible && <Sidebar routes={ROUTES} updateTitle={updateTitle} />}
-              <div className="container-fluid content p-0">
-                {sidebarVisible && <Header title={title} user={currentUser} routes={ROUTES} />}
+              {sidebarVisible && <Sidebar opened={sidebarOpened} routes={ROUTES} updateTitle={updateTitle} />}
+              <div className={`container-fluid content p-0 ${sidebarOpened ? ' content-opened' : ''}`}>
+                {sidebarVisible && (
+                  <Header title={title} user={currentUser} routes={ROUTES} openSidebar={openSidebar} />
+                )}
 
                 <div className="p-4">
                   <Switch>

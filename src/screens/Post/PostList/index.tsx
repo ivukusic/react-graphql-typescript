@@ -2,7 +2,7 @@ import React, { useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import dayjs from 'dayjs';
 
-import { QUERY_POSTS } from './PostList.query';
+import { QUERY_POSTS } from './PostList.gql';
 import Table from '../../../common/components/Table';
 
 import './PostList.style.scss';

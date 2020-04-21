@@ -7,6 +7,7 @@ import logo from '../../../resources/images/NORDIT - logo_white.png';
 import './Sidebar.style.scss';
 
 interface Props extends RouteComponentProps {
+  opened: boolean;
   routes: any;
   updateTitle: (title: string) => void;
 }
@@ -24,7 +25,7 @@ const getIcon = (name: string) => {
   }
 };
 
-const SidebarComponent = ({ history, routes, updateTitle }: Props): JSX.Element => {
+const SidebarComponent = ({ history, opened, routes, updateTitle }: Props): JSX.Element => {
   const [active, setActive] = useState(
     history.location.pathname === '/' ? routes[0].path : `/${history.location.pathname.split('/')[1]}`,
   );
@@ -36,7 +37,7 @@ const SidebarComponent = ({ history, routes, updateTitle }: Props): JSX.Element 
   };
 
   return (
-    <div className="sidebar">
+    <div className={`sidebar${opened ? ' opened' : ''}`}>
       <div className="logo">
         <a href="https://nordit.co/" className="">
           <img className="sidebar__logo" src={logo} alt="NORDIT" />

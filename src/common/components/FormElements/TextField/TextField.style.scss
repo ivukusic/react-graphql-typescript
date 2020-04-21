@@ -3,6 +3,17 @@
   flex-direction: column;
   margin-bottom: 1.6em;
 
+  &.text-field--error {
+    input {
+      border: 1px solid #ff002e99;
+    }
+    .text-field__error-message {
+      color: #ff002e88;
+      font-size: 0.7em;
+      height: auto;
+    }
+  }
+
   label {
     width: 100%;
     font-size: 0.8em;

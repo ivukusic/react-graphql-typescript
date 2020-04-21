@@ -41,6 +41,11 @@ h4 {
 .content {
   height: 100vh;
   overflow: auto;
+  transition: all 0.3s ease-in-out;
+
+  &.content-opened {
+    transform: translateX(260px);
+  }
 }
 
 .card {
@@ -56,4 +61,19 @@ h4 {
   h4 {
     padding-bottom: 0.8em;
   }
+}
+
+.error-message {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: lighter;
+  font-size: 0.8em;
+  color: #ff002e88;
+  margin-bottom: 1em;
+}
+.success-message {
+  font-family: 'Montserrat', sans-serif;
+  font-weight: lighter;
+  font-size: 0.8em;
+  color: #0c7c00;
+  margin-bottom: 1em;
 }
