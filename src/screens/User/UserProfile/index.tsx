@@ -1,27 +1,21 @@
 import React, { useState, ChangeEvent } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { AiOutlineUser } from 'react-icons/ai';
+import { useQuery, useMutation } from 'react-apollo-hooks';
+import { RouteComponentProps, withRouter } from 'react-router-dom';
 
 import Card from '../../../common/components/Card';
-import TextField from '../../../common/components/FormElements/TextField';
-
-import './UserProfile.style.scss';
-import Button from '../../../common/components/Button';
-import TextArea from '../../../common/components/FormElements/TextArea';
-import { QUERY_USER_PROFILE, MUTATION_UPDATE_USER } from './UserProfile.gql';
-import { useQuery, useMutation } from 'react-apollo-hooks';
+import { QUERY_USER_PROFILE, MUTATION_CREATE_USER, MUTATION_UPDATE_USER } from './UserProfile.gql';
 import { Validators } from '../../../common/utils/Validators';
 import { checkValidity, validateForm } from '../../../common/utils/Validation';
 import { updateLocalStateUser } from '../../../common/utils/LocalState';
 import { INITIAL_TEXT_FIELD } from '../../../common/constants/CommonConstants';
+import CreateEditProfile from '../../../common/components/CreateEditProfile';
 
-export const UserProfile = (): JSX.Element => {
-  let { data } = useQuery<any>(QUERY_USER_PROFILE);
-  const [updateUser] = useMutation(MUTATION_UPDATE_USER);
+import './UserProfile.style.scss';
 
-  const currentUser = (data && data.currentUser) || {};
-
-  const [form, setForm] = useState<Record<string, any>>({
+const getInitialForm = (currentUser: any, edit?: boolean) => {
+  const form: any = {
     company: {
       ...INITIAL_TEXT_FIELD,
       field: 'company',
@@ -29,7 +23,7 @@ export const UserProfile = (): JSX.Element => {
       disabled: true,
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: currentUser.company,
+      value: 'Nordit',
     },
     email: {
       ...INITIAL_TEXT_FIELD,
@@ -38,8 +32,11 @@ export const UserProfile = (): JSX.Element => {
       label: 'Email',
       type: 'email',
       required: true,
-      validators: [{ check: Validators.required, message: 'Field required' }],
-      value: currentUser.email,
+      validators: [
+        { check: Validators.required, message: 'Field required' },
+        { check: Validators.email, message: 'Invalid email address' },
+      ],
+      value: edit ? currentUser.email : '',
     },
     firstName: {
       ...INITIAL_TEXT_FIELD,
@@ -47,7 +44,7 @@ export const UserProfile = (): JSX.Element => {
       label: 'First name',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: currentUser.firstName,
+      value: edit ? currentUser.firstName : '',
     },
     lastName: {
       ...INITIAL_TEXT_FIELD,
@@ -55,7 +52,7 @@ export const UserProfile = (): JSX.Element => {
       label: 'Last name',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: currentUser.lastName,
+      value: edit ? currentUser.lastName : '',
     },
     address: {
       ...INITIAL_TEXT_FIELD,
@@ -63,7 +60,7 @@ export const UserProfile = (): JSX.Element => {
       label: 'Address',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: currentUser.address,
+      value: edit ? currentUser.address : '',
     },
     city: {
       ...INITIAL_TEXT_FIELD,
@@ -71,7 +68,7 @@ export const UserProfile = (): JSX.Element => {
       label: 'City',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: currentUser.city,
+      value: edit ? currentUser.city : '',
     },
     country: {
       ...INITIAL_TEXT_FIELD,
@@ -79,7 +76,7 @@ export const UserProfile = (): JSX.Element => {
       label: 'Country',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: currentUser.country,
+      value: edit ? currentUser.country : '',
     },
     postalCode: {
       ...INITIAL_TEXT_FIELD,
@@ -87,15 +84,48 @@ export const UserProfile = (): JSX.Element => {
       label: 'Postal code',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: currentUser.postalCode,
+      value: edit ? currentUser.postalCode : '',
     },
     description: {
       ...INITIAL_TEXT_FIELD,
       field: 'description',
       label: 'Description',
-      value: currentUser.description,
+      value: edit ? currentUser.description : '',
     },
-  });
+  };
+  if (!edit) {
+    form['role'] = {
+      ...INITIAL_TEXT_FIELD,
+      data: ['ADMIN', 'EDITOR', 'USER'],
+      field: 'role',
+      label: 'Role',
+      required: true,
+      validators: [{ check: Validators.required, message: 'Field required' }],
+      value: 'USER',
+    };
+    form['password'] = {
+      ...INITIAL_TEXT_FIELD,
+      field: 'password',
+      label: 'Password',
+      required: true,
+      validators: [{ check: Validators.required, message: 'Field required' }],
+      value: '',
+    };
+  }
+  return form;
+};
+
+export const UserProfile = ({ history }: RouteComponentProps): JSX.Element => {
+  const edit = history.location.pathname.includes('user-profile') || history.location.pathname.includes('user-edit');
+  const userProfile = history.location.pathname.includes('user-profile');
+
+  let { data } = useQuery<any>(QUERY_USER_PROFILE);
+  const [createUser] = useMutation(MUTATION_CREATE_USER);
+  const [updateUser] = useMutation(MUTATION_UPDATE_USER);
+
+  const currentUser = (data && data.currentUser) || {};
+
+  const [form, setForm] = useState<Record<string, any>>(getInitialForm(currentUser, edit));
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
@@ -106,6 +136,14 @@ export const UserProfile = (): JSX.Element => {
       error = checkValidity(form[field].validators, e.target.value).error;
     }
     setForm({ ...form, [field]: { ...form[field], error, value: e.target.value } });
+  };
+
+  const onSelect = (value: string) => {
+    let error = form.role.error;
+    if (error) {
+      error = checkValidity(form.role.validators, value).error;
+    }
+    setForm({ ...form, role: { ...form.role, error, value } });
   };
 
   const onSave = async () => {
@@ -119,11 +157,20 @@ export const UserProfile = (): JSX.Element => {
         Object.keys(form).forEach(key => {
           dataToSend[key] = form[key].value;
         });
-        const { data }: any = await updateUser({ variables: { data: dataToSend, where: { id: currentUser.id } } });
-        if (data && data.updateUser) {
-          await updateLocalStateUser(data.updateUser);
+        let result: any;
+        let type = 'createUser';
+        if (edit) {
+          type = 'updateUser';
+          result = await updateUser({ variables: { data: dataToSend, where: { id: currentUser.id } } });
+        } else {
+          result = await createUser({ variables: { data: dataToSend } });
         }
-        setSuccessMessage('User successfully saved');
+        if (userProfile && result && result.data && result.data[type]) {
+          await updateLocalStateUser(data.updateUser);
+          setSuccessMessage('User successfully saved');
+        } else {
+          history.push('/user/list');
+        }
       } catch ({ graphQLErrors }) {
         if (graphQLErrors && graphQLErrors[0] && graphQLErrors[0].message) {
           setErrorMessage(graphQLErrors[0].message);
@@ -149,83 +196,39 @@ export const UserProfile = (): JSX.Element => {
     }, 5000);
   };
 
-  const renderTextField = (field: string) => (
-    <TextField
-      disabled={form[field].disabled}
-      error={form[field].error && form[field].error.error ? form[field].error.message : ''}
-      field={form[field].field}
-      label={form[field].label}
-      required={form[field].required}
-      onChange={onChange(field)}
-      value={form[field].value}
-    />
-  );
-
-  const renderTextArea = (field: string) => (
-    <TextArea
-      disabled={form[field].disabled}
-      error={form[field].error && form[field].error.error ? form[field].error.message : ''}
-      field={form[field].field}
-      label={form[field].label}
-      required={form[field].required}
-      onChange={onChange(field)}
-      value={form[field].value}
-    />
-  );
-
   return (
     <Container fluid>
       <Row>
-        <Col lg={4} md={8}>
-          <Card className="user-profile mb-4">
-            <div className="user-profile__header"></div>
-            <div className="user-profile__image">
-              <AiOutlineUser size={40} color="darkgray" />
-            </div>
-            <div className="user-profile__content">
-              <h3>Ivan Vukušić</h3>
-              {currentUser.description && <p className="quote">"{currentUser.description}"</p>}
-            </div>
-          </Card>
-        </Col>
+        {edit && (
+          <Col lg={4} md={8}>
+            <Card className="user-profile mb-4">
+              <div className="user-profile__header"></div>
+              <div className="user-profile__image">
+                <AiOutlineUser size={40} color="darkgray" />
+              </div>
+              <div className="user-profile__content">
+                <h3>Ivan Vukušić</h3>
+                {currentUser.description && <p className="quote">"{currentUser.description}"</p>}
+              </div>
+            </Card>
+          </Col>
+        )}
         <Col lg={8} md={12}>
-          <Card className="edit-profile">
-            <h4>Edit profile</h4>
-            <Container fluid>
-              <Row>
-                <Col className="edit-profile__col" lg={4}>
-                  {renderTextField('company')}
-                </Col>
-                <Col className="edit-profile__col">{renderTextField('email')}</Col>
-              </Row>
-              <Row>
-                <Col className="edit-profile__col">{renderTextField('firstName')}</Col>
-                <Col className="edit-profile__col">{renderTextField('lastName')}</Col>
-              </Row>
-
-              <Row>
-                <Col className="edit-profile__col">{renderTextField('address')}</Col>
-              </Row>
-
-              <Row>
-                <Col className="edit-profile__col">{renderTextField('city')}</Col>
-                <Col className="edit-profile__col">{renderTextField('country')}</Col>
-                <Col className="edit-profile__col">{renderTextField('postalCode')}</Col>
-              </Row>
-              <Row>
-                <Col className="edit-profile__col">{renderTextArea('description')}</Col>
-              </Row>
-            </Container>
-            {error && <div className="error-message mb-4">{error}</div>}
-            {message && <div className="success-message mb-4">{message}</div>}
-            <div>
-              <Button label="Save" loading={loading} onClick={onSave} />
-            </div>
-          </Card>
+          <CreateEditProfile
+            edit={edit}
+            error={error}
+            form={form}
+            loading={loading}
+            message={message}
+            onChange={onChange}
+            onSave={onSave}
+            onSelect={onSelect}
+            title={edit ? 'Edit profile' : 'Create profile'}
+          />
         </Col>
       </Row>
     </Container>
   );
 };
 
-export default UserProfile;
+export default withRouter(UserProfile);

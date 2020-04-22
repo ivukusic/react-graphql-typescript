@@ -15,7 +15,7 @@ interface Props {
 export const TextArea = ({ disabled, error, field, label, onChange, required, value }: Props) => (
   <div className={`textarea${error ? ' textarea--error' : ''}`}>
     <label htmlFor={field}>{`${label}${required ? '*' : ''}`}</label>
-    <textarea className={`${disabled ? 'disabled' : ''}`} value={value} onChange={onChange} />
+    <textarea className={`${disabled ? 'disabled' : ''}`} value={value} onChange={!disabled ? onChange : () => {}} />
     <div className="textarea__error-message">{error}</div>
   </div>
 );

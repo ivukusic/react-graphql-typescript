@@ -9,7 +9,6 @@ import Dashboard from './screens/Dashboard';
 import PostList from './screens/Post/PostList';
 import PostCreateEdit from './screens/Post/PostCreateEdit';
 import UserList from './screens/User/UserList';
-import UserCreateEdit from './screens/User/UserCreateEdit';
 import UserProfile from './screens/User/UserProfile';
 
 import routes from './core/Routes';
@@ -93,13 +92,16 @@ export default function App() {
                     </Route>
 
                     <Route path="/user/user-create">
-                      <UserCreateEdit />
+                      <UserProfile key="user-create" />
                     </Route>
                     <Route path="/user/user-profile">
-                      <UserProfile />
+                      <UserProfile key="user-profile" />
                     </Route>
-                    <Route path="/user">
+                    <Route path="/user/list">
                       <UserList />
+                    </Route>
+                    <Route path="/dashboard">
+                      <Dashboard />
                     </Route>
                     <Route path="/">
                       <Dashboard />

@@ -16,7 +16,12 @@ interface Props {
 export const TextField = ({ disabled, error, field, label, onChange, required, type, value }: Props) => (
   <div className={`text-field${error ? ' text-field--error' : ''}`}>
     <label htmlFor={field}>{`${label}${required ? '*' : ''}`}</label>
-    <input className={`${disabled ? 'disabled' : ''}`} type={type} value={value} onChange={onChange} />
+    <input
+      className={`${disabled ? 'disabled' : ''}`}
+      type={type}
+      value={value}
+      onChange={!disabled ? onChange : () => {}}
+    />
     <div className="text-field__error-message">{error}</div>
   </div>
 );

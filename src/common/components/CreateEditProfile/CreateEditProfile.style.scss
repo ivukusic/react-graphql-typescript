@@ -1,0 +1,13 @@
+.edit-profile {
+  padding: 2em 1.4em;
+
+  .edit-profile__col {
+    padding: 0;
+    padding-right: 1em;
+  }
+  .row {
+    .edit-profile__col:last-of-type {
+      padding-right: 0;
+    }
+  }
+}

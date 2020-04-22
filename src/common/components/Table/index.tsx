@@ -66,6 +66,7 @@ export const Table = ({
             Items per page
             <Dropdown
               className="dropdown--items-per-page ml-2"
+              data={[5, 10, 25]}
               onSelect={setItemsPerPage}
               placeholderClassName="d-flex align-items-center justify-content-center"
               value={itemsPerPage}
