@@ -8,8 +8,9 @@
       tr {
         th {
           border-top: none;
-          border-bottom: none !important;
-
+          border-bottom: 1px dotted #7c6300 !important;
+          color: #7c6300;
+          font-weight: bolder;
           &:nth-of-type(2) {
             width: 50%;
           }
@@ -19,8 +20,12 @@
     tbody {
       tr {
         td {
-          border-top: 1px dotted #fafafa !important;
-          border-bottom: none;
+          border-top: 1px dotted #dadada !important;
+
+          a {
+            color: #7c6300;
+            font-weight: bold;
+          }
         }
       }
     }

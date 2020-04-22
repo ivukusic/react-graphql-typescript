@@ -1,5 +1,6 @@
 export const INITIAL_TEXT_FIELD = {
-  error: '',
+  disabled: false,
+  error: null,
   field: '',
   label: '',
   isValid: false,

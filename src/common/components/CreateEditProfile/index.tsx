@@ -8,15 +8,16 @@ import TextField from '../FormElements/TextField';
 import TextArea from '../FormElements/TextArea';
 
 import './CreateEditProfile.style.scss';
+import { UserProfileFormType, UserProfileFormKeysType } from '../../types';
 
 interface Props {
   edit?: boolean;
   error?: string;
-  form: Record<string, any>;
+  form: UserProfileFormType;
   loading?: boolean;
   message?: string;
   title: string;
-  onChange: (field: string) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
+  onChange: (field: UserProfileFormKeysType) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => void;
   onSave: () => void;
   onSelect: (value: any) => void;
 }
@@ -32,44 +33,60 @@ const CreateEditProfile = ({
   onSelect,
   title,
 }: Props): JSX.Element => {
-  const renderTextField = (field: string) => (
-    <TextField
-      disabled={form[field].disabled}
-      error={form[field].error && form[field].error.error ? form[field].error.message : ''}
-      field={form[field].field}
-      label={form[field].label}
-      required={form[field].required}
-      onChange={onChange(field)}
-      value={form[field].value}
-    />
-  );
-
-  const renderTextArea = (field: string) => {
+  const renderTextField = (field: UserProfileFormKeysType): JSX.Element | null => {
+    let formField = form && form[field];
+    if (!formField) {
+      return <div />;
+    }
     return (
-      <TextArea
-        disabled={form[field].disabled}
-        error={form[field].error && form[field].error.error ? form[field].error.message : ''}
-        field={form[field].field}
-        label={form[field].label}
-        required={form[field].required}
+      <TextField
+        disabled={formField.disabled}
+        error={formField.error && formField.error.error ? formField.error.message : ''}
+        field={formField.field}
+        label={formField.label}
+        required={formField.required}
         onChange={onChange(field)}
-        value={form[field].value}
+        value={formField.value}
       />
     );
   };
 
-  const renderDropdown = (field: string) => (
-    <Dropdown
-      disabled={form[field].disabled}
-      error={form[field].error && form[field].error.error ? form[field].error.message : ''}
-      field={form[field].field}
-      label={form[field].label}
-      required={form[field].required}
-      data={['ADMIN', 'EDITOR', 'USER']}
-      onSelect={onSelect}
-      value={form[field].value}
-    />
-  );
+  const renderTextArea = (field: UserProfileFormKeysType) => {
+    let formField = form && form[field];
+    if (!formField) {
+      return <div />;
+    }
+    return (
+      <TextArea
+        disabled={formField.disabled}
+        error={formField.error && formField.error.error ? formField.error.message : ''}
+        field={formField.field}
+        label={formField.label}
+        required={formField.required}
+        onChange={onChange(field)}
+        value={formField.value}
+      />
+    );
+  };
+
+  const renderDropdown = (field: UserProfileFormKeysType) => {
+    let formField = form && form[field];
+    if (!formField) {
+      return <div />;
+    }
+    return (
+      <Dropdown
+        disabled={formField.disabled}
+        error={formField.error && formField.error.error ? formField.error.message : ''}
+        field={formField.field}
+        label={formField.label}
+        required={formField.required}
+        data={['ADMIN', 'EDITOR', 'USER']}
+        onSelect={onSelect}
+        value={formField.value}
+      />
+    );
+  };
 
   return (
     <Card className="edit-profile">
@@ -94,7 +111,7 @@ const CreateEditProfile = ({
           <Col className="edit-profile__col">{renderTextField('country')}</Col>
           <Col className="edit-profile__col">{renderTextField('postalCode')}</Col>
         </Row>
-        {!edit && <Row>{renderDropdown('role')}</Row>}
+        {form.role && <Row>{renderDropdown('role')}</Row>}
         <Row>
           <Col className="edit-profile__col">{renderTextArea('description')}</Col>
         </Row>

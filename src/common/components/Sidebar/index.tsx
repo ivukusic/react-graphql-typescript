@@ -1,6 +1,7 @@
 import React, { useState, SyntheticEvent } from 'react';
 import { AiOutlineBank, AiOutlineUser, AiOutlinePushpin } from 'react-icons/ai';
 import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
+import { MdKeyboardArrowLeft } from 'react-icons/md';
 
 import logo from '../../../resources/images/NORDIT - logo_white.png';
 
@@ -26,6 +27,7 @@ const getIcon = (name: string) => {
 };
 
 const SidebarComponent = ({ history, opened, routes, updateTitle }: Props): JSX.Element => {
+  const [hidden, setHidden] = useState(false);
   const [active, setActive] = useState(
     history.location.pathname === '/' ? routes[0].path : `/${history.location.pathname.split('/')[1]}`,
   );
@@ -36,8 +38,12 @@ const SidebarComponent = ({ history, opened, routes, updateTitle }: Props): JSX.
     setActive(route);
   };
 
+  const onHideClick = () => {
+    setHidden(!hidden);
+  };
+
   return (
-    <div className={`sidebar${opened ? ' opened' : ''}`}>
+    <div className={`sidebar${opened ? ' opened' : ''}${hidden ? ' hidden' : ''}`}>
       <div className="logo">
         <a href="https://nordit.co/" className="">
           <img className="sidebar__logo" src={logo} alt="NORDIT" />
@@ -77,6 +83,12 @@ const SidebarComponent = ({ history, opened, routes, updateTitle }: Props): JSX.
           </ul>
         </nav>
       </div>
+      <MdKeyboardArrowLeft
+        className={`sidebar-minimize-icon${hidden ? ' hidden' : ''}`}
+        size={26}
+        color="white"
+        onClick={onHideClick}
+      />
     </div>
   );
 };

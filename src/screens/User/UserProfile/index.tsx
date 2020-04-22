@@ -1,21 +1,22 @@
-import React, { useState, ChangeEvent } from 'react';
+import React, { useEffect, useState, ChangeEvent } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { AiOutlineUser } from 'react-icons/ai';
 import { useQuery, useMutation } from 'react-apollo-hooks';
-import { RouteComponentProps, withRouter } from 'react-router-dom';
+import { RouteComponentProps, withRouter, useParams } from 'react-router-dom';
 
 import Card from '../../../common/components/Card';
-import { QUERY_USER_PROFILE, MUTATION_CREATE_USER, MUTATION_UPDATE_USER } from './UserProfile.gql';
+import { QUERY_USER_PROFILE, QUERY_USER, MUTATION_CREATE_USER, MUTATION_UPDATE_USER } from './UserProfile.gql';
 import { Validators } from '../../../common/utils/Validators';
 import { checkValidity, validateForm } from '../../../common/utils/Validation';
 import { updateLocalStateUser } from '../../../common/utils/LocalState';
 import { INITIAL_TEXT_FIELD } from '../../../common/constants/CommonConstants';
 import CreateEditProfile from '../../../common/components/CreateEditProfile';
+import { UserProfileFormType, UserProfileFormKeysType, UserType } from '../../../common/types';
 
 import './UserProfile.style.scss';
 
-const getInitialForm = (currentUser: any, edit?: boolean) => {
-  const form: any = {
+const getInitialForm = (user: UserType | null, currentUser: UserType, edit?: boolean): UserProfileFormType => {
+  const form: UserProfileFormType = {
     company: {
       ...INITIAL_TEXT_FIELD,
       field: 'company',
@@ -27,7 +28,7 @@ const getInitialForm = (currentUser: any, edit?: boolean) => {
     },
     email: {
       ...INITIAL_TEXT_FIELD,
-      disabled: currentUser.role !== 'ADMIN',
+      disabled: !currentUser || currentUser.role !== 'ADMIN',
       field: 'email',
       label: 'Email',
       type: 'email',
@@ -36,7 +37,7 @@ const getInitialForm = (currentUser: any, edit?: boolean) => {
         { check: Validators.required, message: 'Field required' },
         { check: Validators.email, message: 'Invalid email address' },
       ],
-      value: edit ? currentUser.email : '',
+      value: edit && user && user.email ? user.email : '',
     },
     firstName: {
       ...INITIAL_TEXT_FIELD,
@@ -44,7 +45,7 @@ const getInitialForm = (currentUser: any, edit?: boolean) => {
       label: 'First name',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: edit ? currentUser.firstName : '',
+      value: edit && user && user.firstName ? user.firstName : '',
     },
     lastName: {
       ...INITIAL_TEXT_FIELD,
@@ -52,7 +53,7 @@ const getInitialForm = (currentUser: any, edit?: boolean) => {
       label: 'Last name',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: edit ? currentUser.lastName : '',
+      value: edit && user && user.lastName ? user.lastName : '',
     },
     address: {
       ...INITIAL_TEXT_FIELD,
@@ -60,7 +61,7 @@ const getInitialForm = (currentUser: any, edit?: boolean) => {
       label: 'Address',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: edit ? currentUser.address : '',
+      value: edit && user && user.address ? user.address : '',
     },
     city: {
       ...INITIAL_TEXT_FIELD,
@@ -68,7 +69,7 @@ const getInitialForm = (currentUser: any, edit?: boolean) => {
       label: 'City',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: edit ? currentUser.city : '',
+      value: edit && user && user.city ? user.city : '',
     },
     country: {
       ...INITIAL_TEXT_FIELD,
@@ -76,7 +77,7 @@ const getInitialForm = (currentUser: any, edit?: boolean) => {
       label: 'Country',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: edit ? currentUser.country : '',
+      value: edit && user && user.country ? user.country : '',
     },
     postalCode: {
       ...INITIAL_TEXT_FIELD,
@@ -84,66 +85,88 @@ const getInitialForm = (currentUser: any, edit?: boolean) => {
       label: 'Postal code',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: edit ? currentUser.postalCode : '',
+      value: edit && user && user.postalCode ? user.postalCode : '',
     },
     description: {
       ...INITIAL_TEXT_FIELD,
       field: 'description',
       label: 'Description',
-      value: edit ? currentUser.description : '',
+      value: edit && user && user.description && user.description ? user.description : '',
     },
   };
-  if (!edit) {
-    form['role'] = {
+  if (!edit || currentUser.role === 'ADMIN') {
+    form.role = {
       ...INITIAL_TEXT_FIELD,
       data: ['ADMIN', 'EDITOR', 'USER'],
       field: 'role',
       label: 'Role',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: 'USER',
+      value: (user && user.role) || 'USER',
     };
-    form['password'] = {
-      ...INITIAL_TEXT_FIELD,
-      field: 'password',
-      label: 'Password',
-      required: true,
-      validators: [{ check: Validators.required, message: 'Field required' }],
-      value: '',
-    };
+    if (!edit) {
+      form.password = {
+        ...INITIAL_TEXT_FIELD,
+        field: 'password',
+        label: 'Password',
+        required: true,
+        validators: [{ check: Validators.required, message: 'Field required' }],
+        value: '',
+      };
+    }
   }
   return form;
 };
 
 export const UserProfile = ({ history }: RouteComponentProps): JSX.Element => {
-  const edit = history.location.pathname.includes('user-profile') || history.location.pathname.includes('user-edit');
+  let { id } = useParams();
+
+  const edit = history.location.pathname.includes('user-profile') || !!id;
   const userProfile = history.location.pathname.includes('user-profile');
 
-  let { data } = useQuery<any>(QUERY_USER_PROFILE);
+  let { data: currentUserData } = useQuery<any>(QUERY_USER_PROFILE);
+  let queryId = id ? parseInt(id, 10) : 0;
+  if (userProfile) {
+    queryId = currentUserData.currentUser.id;
+  }
+  let { data: newData } = useQuery<any>(QUERY_USER, { variables: { where: { id: queryId } } });
+  const user = (newData && newData.user) || {};
+
   const [createUser] = useMutation(MUTATION_CREATE_USER);
   const [updateUser] = useMutation(MUTATION_UPDATE_USER);
 
-  const currentUser = (data && data.currentUser) || {};
-
-  const [form, setForm] = useState<Record<string, any>>(getInitialForm(currentUser, edit));
+  const [formLoaded, setFormLoaded] = useState(false);
+  const [form, setForm] = useState<UserProfileFormType>(getInitialForm(null, currentUserData.currentUser, edit));
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
 
-  const onChange = (field: string) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    let error = form[field].error;
-    if (error) {
-      error = checkValidity(form[field].validators, e.target.value).error;
+  useEffect(() => {
+    if (user && user.id && !formLoaded) {
+      setForm(getInitialForm(user, currentUserData.currentUser, edit));
+      setFormLoaded(true);
     }
-    setForm({ ...form, [field]: { ...form[field], error, value: e.target.value } });
+  }, [user, currentUserData.currentUser, edit, formLoaded]);
+
+  const onChange = (field: UserProfileFormKeysType) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
+    let formField = form && form[field];
+    if (formField) {
+      let error = formField.error;
+      if (error) {
+        error = checkValidity(formField.validators, e.target.value).error;
+      }
+      setForm({ ...form, [field]: { ...formField, error, value: e.target.value } });
+    }
   };
 
   const onSelect = (value: string) => {
-    let error = form.role.error;
-    if (error) {
-      error = checkValidity(form.role.validators, value).error;
+    let error = form.role && form.role.error;
+    if (form.role) {
+      if (error) {
+        error = checkValidity(form.role.validators, value).error;
+      }
+      setForm({ ...form, role: { ...form.role, error, value } });
     }
-    setForm({ ...form, role: { ...form.role, error, value } });
   };
 
   const onSave = async () => {
@@ -153,23 +176,27 @@ export const UserProfile = ({ history }: RouteComponentProps): JSX.Element => {
     } else {
       setLoading(true);
       try {
-        const dataToSend: Record<string, string> = {};
-        Object.keys(form).forEach(key => {
-          dataToSend[key] = form[key].value;
+        const arrayOfKeys: any = Object.keys(form);
+        const dataToSend: any = {};
+        arrayOfKeys.forEach((key: UserProfileFormKeysType) => {
+          const formField = form && form[key];
+          if (formField) {
+            dataToSend[key] = formField.value;
+          }
         });
         let result: any;
         let type = 'createUser';
         if (edit) {
           type = 'updateUser';
-          result = await updateUser({ variables: { data: dataToSend, where: { id: currentUser.id } } });
+          result = await updateUser({ variables: { data: dataToSend, where: { id: user.id } } });
         } else {
           result = await createUser({ variables: { data: dataToSend } });
         }
         if (userProfile && result && result.data && result.data[type]) {
-          await updateLocalStateUser(data.updateUser);
+          await updateLocalStateUser(result.data.updateUser);
           setSuccessMessage('User successfully saved');
         } else {
-          history.push('/user/list');
+          history.push({ pathname: '/user', state: { refresh: true } });
         }
       } catch ({ graphQLErrors }) {
         if (graphQLErrors && graphQLErrors[0] && graphQLErrors[0].message) {
@@ -199,7 +226,7 @@ export const UserProfile = ({ history }: RouteComponentProps): JSX.Element => {
   return (
     <Container fluid>
       <Row>
-        {edit && (
+        {userProfile && (
           <Col lg={4} md={8}>
             <Card className="user-profile mb-4">
               <div className="user-profile__header"></div>
@@ -207,25 +234,29 @@ export const UserProfile = ({ history }: RouteComponentProps): JSX.Element => {
                 <AiOutlineUser size={40} color="darkgray" />
               </div>
               <div className="user-profile__content">
-                <h3>Ivan Vukušić</h3>
-                {currentUser.description && <p className="quote">"{currentUser.description}"</p>}
+                <h3>{`${currentUserData.currentUser.firstName} ${currentUserData.currentUser.lastName}`}</h3>
+                {currentUserData.currentUser.description && (
+                  <p className="quote">"{currentUserData.currentUser.description}"</p>
+                )}
               </div>
             </Card>
           </Col>
         )}
-        <Col lg={8} md={12}>
-          <CreateEditProfile
-            edit={edit}
-            error={error}
-            form={form}
-            loading={loading}
-            message={message}
-            onChange={onChange}
-            onSave={onSave}
-            onSelect={onSelect}
-            title={edit ? 'Edit profile' : 'Create profile'}
-          />
-        </Col>
+        {form && !!Object.keys(form).length && (
+          <Col lg={8} md={12}>
+            <CreateEditProfile
+              edit={edit}
+              error={error}
+              form={form}
+              loading={loading}
+              message={message}
+              onChange={onChange}
+              onSave={onSave}
+              onSelect={onSelect}
+              title={edit ? 'Edit profile' : 'Create profile'}
+            />
+          </Col>
+        )}
       </Row>
     </Container>
   );

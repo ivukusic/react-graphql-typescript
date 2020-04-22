@@ -4,8 +4,7 @@ import dayjs from 'dayjs';
 
 import { QUERY_POSTS } from './PostList.gql';
 import Table from '../../../common/components/Table';
-
-import './PostList.style.scss';
+import { PostEdgesType } from '../../../common/types';
 
 const tableFields = [
   { name: 'id', label: 'ID' },
@@ -16,8 +15,8 @@ const tableFields = [
 ];
 
 export const PostList = (): JSX.Element => {
-  const [itemsPerPage, setItemsPerPage] = useState(5);
-  const [currentPage, setCurrentPage] = useState(1);
+  const [itemsPerPage, setItemsPerPage] = useState<number>(5);
+  const [currentPage, setCurrentPage] = useState<number>(1);
   const { loading, error, data } = useQuery(QUERY_POSTS, {
     variables: { first: itemsPerPage, skip: (currentPage - 1) * itemsPerPage },
   });
@@ -31,14 +30,13 @@ export const PostList = (): JSX.Element => {
     setItemsPerPage(value);
   };
 
-  const transformData = (data: any) => {
-    return data.map(({ node }: any) => ({
+  const transformData = (data: Array<PostEdgesType>): Array<PostEdgesType> =>
+    data.map(({ node }: any) => ({
       ...node,
       author: `${node.author.firstName} ${node.author.lastName}`,
       date: dayjs(node.createdAt).format('DD.MM.YYYY'),
       comments: node.commentsConnection.totalCount || '-',
     }));
-  };
 
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{`Error! ${error.message}`}</div>;

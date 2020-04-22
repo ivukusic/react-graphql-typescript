@@ -1,8 +1,9 @@
 .sidebar {
+  position: relative;
   font-family: 'Montserrat', sans-serif;
   font-weight: lighter;
   background-color: #20211f;
-  width: 260px;
+  max-width: 260px;
   min-height: calc(100vh + 400px);
   box-shadow: outset 3px 3px 3px #20211f;
 
@@ -17,8 +18,9 @@
       color: #f2c300;
 
       .sidebar__logo {
-        width: 100px;
+        width: 120px;
         height: auto;
+        transition: all 0.4s ease-in-out;
       }
     }
 
@@ -41,7 +43,6 @@
         list-style: none;
         margin: 0;
         margin-bottom: 2px;
-        padding: 0 0.5em;
         border-left: 2px solid #20211f;
 
         &.active {
@@ -50,18 +51,6 @@
           position: relative;
           a {
             color: #f2c300;
-          }
-          &:after {
-            position: absolute;
-            top: calc(50% - 15px);
-            bottom: 0;
-            right: 0;
-            width: 0;
-            height: 0;
-            border-style: solid;
-            border-width: 15px 15px 15px 0;
-            border-color: transparent #f4f3ef transparent transparent;
-            content: ' ';
           }
         }
 
@@ -83,13 +72,18 @@
         }
         svg {
           margin-right: 10px;
+          height: 36px;
         }
         p {
           margin: 0;
-          padding: 1.4em 0.6em;
           font-size: 0.75em;
           text-transform: uppercase;
           letter-spacing: 0.05em;
+          width: 200px;
+          padding: 1.4em 1em;
+          transition: all 0.4s ease-in-out;
+          max-width: 200px;
+          opacity: 1;
         }
       }
 
@@ -139,6 +133,26 @@
   }
 }
 
+@media screen and (min-width: 768px) {
+  .sidebar.hidden > .logo > a > .sidebar__logo {
+    width: 60px;
+  }
+
+  .sidebar.hidden {
+    nav {
+      ul {
+        .menu-item {
+          p {
+            max-width: 0;
+            padding: 1.4em 0;
+            opacity: 0;
+          }
+        }
+      }
+    }
+  }
+}
+
 @media screen and (max-width: 768px) {
   .sidebar {
     position: fixed;
@@ -152,5 +166,18 @@
     &.opened {
       transform: translateX(0);
     }
+  }
+}
+
+.sidebar-minimize-icon {
+  background-color: #20211f;
+  position: absolute;
+  top: 45px;
+  right: -10px;
+  border-radius: 50%;
+  border: 1px solid #ffffff33;
+  transition: all 0.4s ease-in-out;
+  &.hidden {
+    transform: rotate(180deg);
   }
 }

@@ -10,10 +10,10 @@ interface Props {
   error: string;
   field?: string;
   label?: string;
-  onSelect: (value: any) => void;
+  onSelect: (value: string | number) => void;
   placeholderClassName?: string;
   required?: boolean;
-  value: any;
+  value: string | number;
 }
 
 export const Dropdown = ({

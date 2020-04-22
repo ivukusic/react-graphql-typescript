@@ -19,6 +19,7 @@ export const validateForm = (fields: any, values: any) => {
       fields.forEach((field: any) => {
         if (values[field]) {
           const validity = checkValidity(values[field].validators, values[field].value);
+          console.log(validity);
           if (!validity.valid) {
             isValid = false;
           }

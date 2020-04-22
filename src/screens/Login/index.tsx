@@ -15,11 +15,12 @@ import { createLocalStateUser } from '../../common/utils/LocalState';
 import { INITIAL_TEXT_FIELD } from '../../common/constants/CommonConstants';
 import { Validators } from '../../common/utils/Validators';
 import { validateForm, checkValidity } from '../../common/utils/Validation';
+import { UserType } from '../../common/types';
 
 interface Props extends RouteComponentProps {
   showSidebar: () => void;
   updateTitle: (title: string) => void;
-  setUser: (user: any) => void;
+  setUser: (user: UserType) => void;
 }
 
 export const Login = ({ history, showSidebar, setUser, updateTitle }: Props): JSX.Element => {
@@ -37,7 +38,7 @@ export const Login = ({ history, showSidebar, setUser, updateTitle }: Props): JS
         { check: Validators.required, message: 'Field required' },
         { check: Validators.email, message: 'Invalid email address' },
       ],
-      value: 'info@nordit.c',
+      value: 'info@nordit.co',
     },
     password: {
       ...INITIAL_TEXT_FIELD,

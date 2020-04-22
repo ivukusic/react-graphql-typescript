@@ -4,7 +4,7 @@ const usersAdmin = {
   icon: 'AiOutlineUser',
   menu: [
     {
-      path: '/user/list',
+      path: '/user',
       name: 'User List',
     },
     {

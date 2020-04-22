@@ -43,8 +43,10 @@ h4 {
   overflow: auto;
   transition: all 0.3s ease-in-out;
 
-  &.content-opened {
-    transform: translateX(260px);
+  @media screen and (max-width: 769px) {
+    &.content-opened {
+      transform: translateX(260px);
+    }
   }
 }
 
@@ -67,7 +69,7 @@ h4 {
   font-family: 'Montserrat', sans-serif;
   font-weight: lighter;
   font-size: 0.8em;
-  color: #ff002e88;
+  color: #ff002ebb;
   margin-bottom: 1em;
 }
 .success-message {

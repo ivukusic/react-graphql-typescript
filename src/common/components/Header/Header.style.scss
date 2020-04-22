@@ -12,3 +12,9 @@
     display: none;
   }
 }
+
+@media screen and (max-width: 769px) {
+  .sidebar-minimize-icon {
+    display: none;
+  }
+}

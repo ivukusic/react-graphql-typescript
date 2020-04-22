@@ -15,15 +15,29 @@ import routes from './core/Routes';
 import Header from './common/components/Header';
 import Sidebar from './common/components/Sidebar';
 import { QUERY_CURRENT_USER } from './common/apollo/query/user.gql';
+import { Popup } from './common/components/Popup';
+import { UserType, PopupType } from './common/types';
 
-export const MenuContext = React.createContext({ title: 'Dashboard', showSidebar: () => {} });
+export const MenuContext = React.createContext<any>({
+  title: 'Dashboard',
+  showSidebar: () => {},
+  popup: {
+    cb: null,
+    message: '',
+    title: '',
+    visible: false,
+  },
+  togglePopup: () => {},
+});
 
 ApolloWrapper.initialize();
 
 export default function App() {
   const [title, setTitle] = useState('');
   const [sidebarVisible, setSidebarVisible] = useState(false);
+  const [sidebarHidden, setSidebarHidden] = useState(false);
   const [sidebarOpened, setSidebarOpened] = useState(false);
+  const [popup, setPopup] = useState<PopupType>({ cb: null, message: '', title: '', visible: false });
   const [currentUser, setCurrentUser] = useState<any>({});
 
   useEffect(() => {
@@ -50,8 +64,12 @@ export default function App() {
     setTitle(title);
   };
 
-  const setUser = (user: any) => {
+  const setUser = (user: UserType) => {
     setCurrentUser(user);
+  };
+
+  const togglePopup = ({ cb, message, title }: PopupType) => {
+    setPopup({ cb, message, title, visible: !popup.visible });
   };
 
   const openSidebar = () => {
@@ -69,7 +87,7 @@ export default function App() {
   return (
     <ApolloProvider client={ApolloWrapper.client}>
       <ApolloHooksProvider client={ApolloWrapper.client}>
-        <MenuContext.Provider value={{ title, showSidebar }}>
+        <MenuContext.Provider value={{ title, showSidebar, popup, togglePopup }}>
           <Router>
             <div className="d-flex flex-row">
               {sidebarVisible && <Sidebar opened={sidebarOpened} routes={ROUTES} updateTitle={updateTitle} />}
@@ -94,10 +112,13 @@ export default function App() {
                     <Route path="/user/user-create">
                       <UserProfile key="user-create" />
                     </Route>
+                    <Route path="/user/:id">
+                      <UserProfile key="user-edit" />
+                    </Route>
                     <Route path="/user/user-profile">
                       <UserProfile key="user-profile" />
                     </Route>
-                    <Route path="/user/list">
+                    <Route path="/user">
                       <UserList />
                     </Route>
                     <Route path="/dashboard">
@@ -110,6 +131,7 @@ export default function App() {
                 </div>
               </div>
             </div>
+            <Popup togglePopup={togglePopup} popup={popup} />
           </Router>
         </MenuContext.Provider>
       </ApolloHooksProvider>

@@ -16,4 +16,20 @@
   &:focus {
     outline: none;
   }
+
+  &.button--confirm {
+    background-color: green;
+
+    &:hover {
+      background-color: lighten(green, 3);
+    }
+  }
+
+  &.button--cancel {
+    background-color: #ff002ecc;
+
+    &:hover {
+      background-color: darken(#ff002ecc, 3);
+    }
+  }
 }
