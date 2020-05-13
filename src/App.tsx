@@ -35,7 +35,6 @@ ApolloWrapper.initialize();
 export default function App() {
   const [title, setTitle] = useState('');
   const [sidebarVisible, setSidebarVisible] = useState(false);
-  const [sidebarHidden, setSidebarHidden] = useState(false);
   const [sidebarOpened, setSidebarOpened] = useState(false);
   const [popup, setPopup] = useState<PopupType>({ cb: null, message: '', title: '', visible: false });
   const [currentUser, setCurrentUser] = useState<any>({});
@@ -102,20 +101,23 @@ export default function App() {
                       <Login showSidebar={showSidebar} setUser={setUser} updateTitle={updateTitle} />
                     </Route>
 
-                    <Route path="/post/post-create">
+                    <Route path="/post/:id/edit/">
+                      <PostCreateEdit />
+                    </Route>
+                    <Route path="/post/create">
                       <PostCreateEdit />
                     </Route>
                     <Route path="/post">
                       <PostList />
                     </Route>
 
-                    <Route path="/user/user-create">
+                    <Route path="/user/create">
                       <UserProfile key="user-create" />
                     </Route>
-                    <Route path="/user/:id">
+                    <Route path="/user/:id/edit">
                       <UserProfile key="user-edit" />
                     </Route>
-                    <Route path="/user/user-profile">
+                    <Route path="/user-profile">
                       <UserProfile key="user-profile" />
                     </Route>
                     <Route path="/user">

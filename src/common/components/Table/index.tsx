@@ -1,13 +1,12 @@
 import * as React from 'react';
 import { AiTwotoneDelete } from 'react-icons/ai';
+import { Link } from 'react-router-dom';
 
 import Card from '../Card';
 import Dropdown from '../FormElements/Dropdown';
 import Pagination from '../Pagination';
 
 import './Table.style.scss';
-import { Link } from 'react-router-dom';
-import { UserType } from '../../types';
 
 type Field = {
   name: string;
@@ -24,13 +23,13 @@ interface Props {
   data: Array<any>;
   totalCount: number;
   pageInfo: PageInfoType;
-  link?: string;
+  link?: (id: number) => string;
   fields: Field[];
   goToPage: (page: number) => () => void;
   itemsPerPage: number;
   name: string;
   setItemsPerPage: (value: any) => void;
-  onDelete?: (object: UserType) => () => void;
+  onDelete?: (id: number) => () => void;
 }
 
 export const Table = ({
@@ -64,11 +63,11 @@ export const Table = ({
               <tr key={node.id}>
                 {fields.map((item: any, i: number) => (
                   <td key={`${item.id}${i}}`}>
-                    {link && i < 2 ? <Link to={`${link}/${node.id}`}>{node[item.name]}</Link> : node[item.name]}
+                    {link && i < 2 ? <Link to={link(node.id)}>{node[item.name]}</Link> : node[item.name]}
                   </td>
                 ))}
                 <td>
-                  <div onClick={onDelete ? onDelete(node) : () => {}}>
+                  <div onClick={onDelete ? onDelete(node.id) : () => {}}>
                     <AiTwotoneDelete className="" color="#ff002eBB" size={20} />
                   </div>
                 </td>

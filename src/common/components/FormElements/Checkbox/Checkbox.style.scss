@@ -1,0 +1,26 @@
+.checkbox {
+  position: relative;
+  display: flex;
+  flex-direction: row;
+  justify-content: flex-start;
+  font-size: 0.9em;
+  margin-bottom: 1em;
+  .checkbox__box {
+    width: 20px;
+    height: 20px;
+    border: 1px solid #f2c300;
+    border-radius: 2px;
+    margin-right: 10px;
+    svg {
+      position: absolute;
+      top: -5px;
+      left: -5px;
+      height: 30px;
+      width: 30px;
+      fill: darken(#f2c300, 5);
+    }
+  }
+  label {
+    padding-top: 2px;
+  }
+}

@@ -8,11 +8,11 @@ const usersAdmin = {
       name: 'User List',
     },
     {
-      path: '/user/user-profile',
+      path: '/user-profile',
       name: 'User profile',
     },
     {
-      path: '/user/user-create',
+      path: '/user/create',
       name: 'Create user',
     },
   ],
@@ -24,7 +24,7 @@ const users = {
   icon: 'AiOutlineUser',
   menu: [
     {
-      path: '/user/user-profile',
+      path: '/user-profile',
       name: 'User profile',
     },
   ],
@@ -47,7 +47,7 @@ const routes = (role: string) => {
           name: 'Posts List',
         },
         {
-          path: '/post/post-create',
+          path: '/post/create',
           name: 'Create post',
         },
       ],

@@ -6,6 +6,7 @@ import dayjs from 'dayjs';
 import { QUERY_USERS, MUTATION_DELETE_USER } from './UserList.gql';
 import Table from '../../../common/components/Table';
 import { MenuContext } from '../../../App';
+import { extractMessageFromError } from '../../../common/utils/Error';
 
 const tableFields = [
   { name: 'id', label: 'ID' },
@@ -27,7 +28,7 @@ export const UserList = ({ history }: { history: any }): JSX.Element => {
   const [deleteUser] = useMutation(MUTATION_DELETE_USER);
 
   useEffect(() => {
-    if (history.location.state && history.location.state.refresh && data && data.usersConnection) {
+    if (history && history.location.state && history.location.state.refresh && data && data.usersConnection) {
       refetch();
     }
   }, [history, data, refetch]);
@@ -41,23 +42,20 @@ export const UserList = ({ history }: { history: any }): JSX.Element => {
     setItemsPerPage(value);
   };
 
-  const onUserDelete = (user: any) => () => {
+  const onUserDelete = (id: number) => () => {
     togglePopup({
       cb: async (success: any, error: any) => {
         try {
-          await deleteUser({ variables: { where: { id: user.id } } });
+          await deleteUser({ variables: { where: { id } } });
           refetch();
           success();
         } catch ({ graphQLErrors }) {
-          let errorMessage = 'Something went wrong';
-          if (graphQLErrors && graphQLErrors[0] && graphQLErrors[0].message) {
-            errorMessage = graphQLErrors[0].message;
-          }
+          let errorMessage = extractMessageFromError(graphQLErrors);
           error(errorMessage);
         }
       },
       title: 'Delete user',
-      message: `Are you sure you want to delete user "${user.name}" with id "${user.id}"?`,
+      message: `Are you sure you want to delete user with id "${id}"?`,
     });
   };
 
@@ -70,6 +68,10 @@ export const UserList = ({ history }: { history: any }): JSX.Element => {
     }));
   };
 
+  const generateLink = (id: number) => {
+    return `/user/${id}/edit`;
+  };
+
   if (loading) return <div>Loading...</div>;
   if (error) return <div>{`Error! ${error.message}`}</div>;
 
@@ -80,7 +82,7 @@ export const UserList = ({ history }: { history: any }): JSX.Element => {
         data={transformData(data.usersConnection.edges)}
         fields={tableFields}
         itemsPerPage={itemsPerPage}
-        link="/user"
+        link={generateLink}
         name="Users"
         goToPage={goToPage}
         pageInfo={data.usersConnection.pageInfo}

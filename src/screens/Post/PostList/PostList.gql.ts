@@ -13,6 +13,7 @@ export const QUERY_POSTS = gql`
           id
           title
           body
+          published
           author {
             firstName
             lastName
@@ -26,6 +27,17 @@ export const QUERY_POSTS = gql`
           }
         }
       }
+    }
+  }
+`;
+
+export const MUTATION_DELETE_POST = gql`
+  mutation deletePost($where: PostWhereUniqueInput!) {
+    deletePost(where: $where) {
+      id
+      title
+      body
+      published
     }
   }
 `;

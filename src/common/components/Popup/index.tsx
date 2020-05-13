@@ -42,7 +42,7 @@ export const Popup = ({ togglePopup, popup }: Props) => {
 
   const success = () => {
     setLoading(false);
-    togglePopup();
+    togglePopup({});
   };
 
   const error = (message: string) => {
@@ -58,7 +58,7 @@ export const Popup = ({ togglePopup, popup }: Props) => {
       setLoading(true);
       currentPopup.cb(success, error);
     } else {
-      togglePopup();
+      togglePopup({});
     }
   };
 

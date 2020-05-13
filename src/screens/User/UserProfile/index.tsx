@@ -1,19 +1,21 @@
-import React, { useEffect, useState, ChangeEvent } from 'react';
+import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'reactstrap';
 import { AiOutlineUser } from 'react-icons/ai';
 import { useQuery, useMutation } from 'react-apollo-hooks';
-import { RouteComponentProps, withRouter, useParams } from 'react-router-dom';
+import { withRouter, useParams } from 'react-router-dom';
 
 import Card from '../../../common/components/Card';
 import { QUERY_USER_PROFILE, QUERY_USER, MUTATION_CREATE_USER, MUTATION_UPDATE_USER } from './UserProfile.gql';
 import { Validators } from '../../../common/utils/Validators';
-import { checkValidity, validateForm } from '../../../common/utils/Validation';
+import { validateForm } from '../../../common/utils/Validation';
 import { updateLocalStateUser } from '../../../common/utils/LocalState';
 import { INITIAL_TEXT_FIELD } from '../../../common/constants/CommonConstants';
-import CreateEditProfile from '../../../common/components/CreateEditProfile';
+import CreateEditProfile from '../CreateEditProfile';
 import { UserProfileFormType, UserProfileFormKeysType, UserType } from '../../../common/types';
 
 import './UserProfile.style.scss';
+import { useForm } from '../../../common/components/FormElements/Form.hook';
+import { extractMessageFromError } from '../../../common/utils/Error';
 
 const getInitialForm = (user: UserType | null, currentUser: UserType, edit?: boolean): UserProfileFormType => {
   const form: UserProfileFormType = {
@@ -118,7 +120,7 @@ const getInitialForm = (user: UserType | null, currentUser: UserType, edit?: boo
   return form;
 };
 
-export const UserProfile = ({ history }: RouteComponentProps): JSX.Element => {
+export const UserProfile = ({ history }: { history: any }): JSX.Element => {
   let { id } = useParams();
 
   const edit = history.location.pathname.includes('user-profile') || !!id;
@@ -136,38 +138,21 @@ export const UserProfile = ({ history }: RouteComponentProps): JSX.Element => {
   const [updateUser] = useMutation(MUTATION_UPDATE_USER);
 
   const [formLoaded, setFormLoaded] = useState(false);
-  const [form, setForm] = useState<UserProfileFormType>(getInitialForm(null, currentUserData.currentUser, edit));
+  const [initialForm, setInitialForm] = useState<UserProfileFormType>(
+    getInitialForm(null, currentUserData.currentUser, edit),
+  );
   const [error, setError] = useState('');
   const [message, setMessage] = useState('');
   const [loading, setLoading] = useState(false);
+  const formData = useForm(initialForm);
+  const { form, setForm } = formData;
 
   useEffect(() => {
     if (user && user.id && !formLoaded) {
-      setForm(getInitialForm(user, currentUserData.currentUser, edit));
+      setInitialForm(getInitialForm(user, currentUserData.currentUser, edit));
       setFormLoaded(true);
     }
   }, [user, currentUserData.currentUser, edit, formLoaded]);
-
-  const onChange = (field: UserProfileFormKeysType) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    let formField = form && form[field];
-    if (formField) {
-      let error = formField.error;
-      if (error) {
-        error = checkValidity(formField.validators, e.target.value).error;
-      }
-      setForm({ ...form, [field]: { ...formField, error, value: e.target.value } });
-    }
-  };
-
-  const onSelect = (value: string) => {
-    let error = form.role && form.role.error;
-    if (form.role) {
-      if (error) {
-        error = checkValidity(form.role.validators, value).error;
-      }
-      setForm({ ...form, role: { ...form.role, error, value } });
-    }
-  };
 
   const onSave = async () => {
     const valid = validateForm(Object.keys(form), form);
@@ -199,11 +184,7 @@ export const UserProfile = ({ history }: RouteComponentProps): JSX.Element => {
           history.push({ pathname: '/user', state: { refresh: true } });
         }
       } catch ({ graphQLErrors }) {
-        if (graphQLErrors && graphQLErrors[0] && graphQLErrors[0].message) {
-          setErrorMessage(graphQLErrors[0].message);
-        } else {
-          setErrorMessage("Something went wrong. Maybe it's your internet connection");
-        }
+        setErrorMessage(extractMessageFromError(graphQLErrors));
       }
       setLoading(false);
     }
@@ -245,14 +226,12 @@ export const UserProfile = ({ history }: RouteComponentProps): JSX.Element => {
         {form && !!Object.keys(form).length && (
           <Col lg={8} md={12}>
             <CreateEditProfile
+              {...formData}
               edit={edit}
               error={error}
-              form={form}
               loading={loading}
               message={message}
-              onChange={onChange}
               onSave={onSave}
-              onSelect={onSelect}
               title={edit ? 'Edit profile' : 'Create profile'}
             />
           </Col>

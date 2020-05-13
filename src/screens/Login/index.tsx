@@ -16,6 +16,7 @@ import { INITIAL_TEXT_FIELD } from '../../common/constants/CommonConstants';
 import { Validators } from '../../common/utils/Validators';
 import { validateForm, checkValidity } from '../../common/utils/Validation';
 import { UserType } from '../../common/types';
+import { extractMessageFromError } from '../../common/utils/Error';
 
 interface Props extends RouteComponentProps {
   showSidebar: () => void;
@@ -85,11 +86,7 @@ export const Login = ({ history, showSidebar, setUser, updateTitle }: Props): JS
         updateTitle(ROUTES[0].name);
         setUser(user);
       } catch ({ graphQLErrors }) {
-        if (graphQLErrors && graphQLErrors[0] && graphQLErrors[0].message) {
-          setErrorMessage(graphQLErrors[0].message);
-        } else {
-          setErrorMessage("Something went wrong. Maybe it's your internet connection");
-        }
+        setErrorMessage(extractMessageFromError(graphQLErrors));
       }
       setLoading(false);
     }
