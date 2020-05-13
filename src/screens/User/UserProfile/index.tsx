@@ -1,10 +1,8 @@
 import React, { useEffect, useState } from 'react';
 import { Container, Row, Col } from 'reactstrap';
-import { AiOutlineUser } from 'react-icons/ai';
 import { useQuery, useMutation } from 'react-apollo-hooks';
 import { withRouter, useParams } from 'react-router-dom';
 
-import Card from '../../../common/components/Card';
 import { QUERY_USER_PROFILE, QUERY_USER, MUTATION_CREATE_USER, MUTATION_UPDATE_USER } from './UserProfile.gql';
 import { Validators } from '../../../common/utils/Validators';
 import { validateForm } from '../../../common/utils/Validation';
@@ -12,10 +10,9 @@ import { updateLocalStateUser } from '../../../common/utils/LocalState';
 import { INITIAL_TEXT_FIELD } from '../../../common/constants/CommonConstants';
 import CreateEditProfile from '../CreateEditProfile';
 import { UserProfileFormType, UserProfileFormKeysType, UserType } from '../../../common/types';
-
-import './UserProfile.style.scss';
 import { useForm } from '../../../common/components/FormElements/Form.hook';
 import { extractMessageFromError } from '../../../common/utils/Error';
+import UserCard from '../../../common/components/UserCard';
 
 const getInitialForm = (user: UserType | null, currentUser: UserType, edit?: boolean): UserProfileFormType => {
   const form: UserProfileFormType = {
@@ -209,18 +206,7 @@ export const UserProfile = ({ history }: { history: any }): JSX.Element => {
       <Row>
         {userProfile && (
           <Col lg={4} md={8}>
-            <Card className="user-profile mb-4">
-              <div className="user-profile__header"></div>
-              <div className="user-profile__image">
-                <AiOutlineUser size={40} color="darkgray" />
-              </div>
-              <div className="user-profile__content">
-                <h3>{`${currentUserData.currentUser.firstName} ${currentUserData.currentUser.lastName}`}</h3>
-                {currentUserData.currentUser.description && (
-                  <p className="quote">"{currentUserData.currentUser.description}"</p>
-                )}
-              </div>
-            </Card>
+            <UserCard user={currentUserData.currentUser} />
           </Col>
         )}
         {form && !!Object.keys(form).length && (
