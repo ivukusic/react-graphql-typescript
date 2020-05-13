@@ -5,15 +5,17 @@ import './Dropdown.style.scss';
 
 interface Props {
   className?: string;
-  data: Array<string | number>;
+  data: Array<any>;
   disabled?: boolean;
   error: string;
   field?: string;
+  idKey: string;
+  keys: Array<{ display: string; separator?: string }>;
   label?: string;
-  onSelect: (value: string | number) => void;
+  onSelect: (value: any) => void;
   placeholderClassName?: string;
   required?: boolean;
-  value: string | number;
+  value: any;
 }
 
 export const Dropdown = ({
@@ -22,6 +24,8 @@ export const Dropdown = ({
   disabled,
   error,
   field,
+  idKey,
+  keys,
   label,
   onSelect,
   placeholderClassName,
@@ -53,21 +57,33 @@ export const Dropdown = ({
     onSelect(value);
   };
 
-  const placeholder = () => <div className={`d-flex flex-grow-1 ${placeholderClassName}`}>{value || 'Select'}</div>;
+  const placeholder = () => {
+    return <div className={`d-flex flex-grow-1 ${placeholderClassName}`}>{value ? getOption(value) : 'Select'}</div>;
+  };
+
+  const getOption = (item: any) => {
+    let displayValue = '';
+    keys.forEach(({ display, separator }: { display: string; separator?: string }) => {
+      if (item[display]) {
+        displayValue += item[display];
+      }
+      if (separator) {
+        displayValue += separator;
+      }
+    });
+    return displayValue;
+  };
 
   return (
-    <div className={`dropdown${error ? ' dropdown--error' : ''}`} ref={dropdown}>
+    <div className={`dropdown${error ? ' dropdown--error' : ''}${className ? ` ${className}` : ''}`} ref={dropdown}>
       {label && <label htmlFor={field}>{`${label}${required ? '*' : ''}`}</label>}
-      <div
-        className={`dropdown-content ${className ? className : ''}${disabled ? ' dropdown-content--disabled' : ''}`}
-        onClick={dropdownClick}
-      >
+      <div className={`dropdown-content ${disabled ? ' dropdown-content--disabled' : ''}`} onClick={dropdownClick}>
         {placeholder()}
         <MdKeyboardArrowDown size={14} color="#323232" />
         <ul className={`${opened ? 'opened' : ''}`}>
-          {data.map((item: string | number) => (
-            <li key={item} onClick={onSelectValue(item)}>
-              {item}
+          {data.map(item => (
+            <li key={item[idKey]} onClick={onSelectValue(item)}>
+              {getOption(item)}
             </li>
           ))}
         </ul>

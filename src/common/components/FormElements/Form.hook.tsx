@@ -7,7 +7,7 @@ import TextArea from './TextArea';
 import Dropdown from './Dropdown';
 import Checkbox from './Checkbox';
 
-export const useForm = (fields: any) => {
+export const useForm = (fields: any, onFormChange?: any) => {
   const [initialForm, setInitialForm] = useState(fields);
   const [form, setForm] = useState(fields);
 
@@ -26,6 +26,10 @@ export const useForm = (fields: any) => {
         error = checkValidity(formField.validators, e.target.value).error;
       }
       setForm({ ...form, [field]: { ...formField, error, value: e.target.value } });
+      if (onFormChange) {
+        onFormChange({ field, form });
+        onFormChange({ field, form: { ...form, [field]: { ...formField, error, value: e.target.value } } });
+      }
     }
   };
 
@@ -37,17 +41,23 @@ export const useForm = (fields: any) => {
         error = checkValidity(formField.validators, !formField.value).error;
       }
       setForm({ ...form, [field]: { ...formField, error, value: !formField.value } });
+      if (onFormChange) {
+        onFormChange({ field, form: { ...form, [field]: { ...formField, error, value: !formField.value } } });
+      }
     }
   };
 
-  const onSelect = (field: string) => (value: string | number) => {
+  const onSelect = (field: string) => (value: any) => {
     let formField = form && form[field];
     if (formField) {
       let error = formField.error;
       if (error) {
         error = checkValidity(form.role.validators, value).error;
       }
-      setForm({ ...form, role: { ...form.role, error, value } });
+      setForm({ ...form, [field]: { ...form[field], error, value } });
+      if (onFormChange) {
+        onFormChange({ field, form: { ...form, [field]: { ...formField, error, value } } });
+      }
     }
   };
 
@@ -94,12 +104,15 @@ export const useForm = (fields: any) => {
     }
     return (
       <Dropdown
+        className={formField.className}
         disabled={formField.disabled}
         error={formField.error && formField.error.error ? formField.error.message : ''}
         field={formField.field}
         label={formField.label}
         required={formField.required}
-        data={['ADMIN', 'EDITOR', 'USER']}
+        data={formField.data}
+        keys={formField.keys}
+        idKey={formField.idKey}
         onSelect={onSelect(field)}
         value={formField.value}
       />

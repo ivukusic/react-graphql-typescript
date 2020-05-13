@@ -1,8 +1,8 @@
 import gql from 'graphql-tag';
 
 export const QUERY_POSTS = gql`
-  query($first: Int, $skip: Int) {
-    postsConnection(first: $first, skip: $skip) {
+  query($first: Int, $skip: Int, $where: PostWhereInput) {
+    postsConnection(first: $first, skip: $skip, where: $where) {
       totalCount
       pageInfo {
         hasNextPage
@@ -15,6 +15,7 @@ export const QUERY_POSTS = gql`
           body
           published
           author {
+            id
             firstName
             lastName
           }
@@ -27,6 +28,11 @@ export const QUERY_POSTS = gql`
           }
         }
       }
+    }
+    users {
+      id
+      firstName
+      lastName
     }
   }
 `;

@@ -6,9 +6,10 @@ import { withRouter } from 'react-router-dom';
 
 import { QUERY_POSTS, MUTATION_DELETE_POST } from './PostList.gql';
 import Table from '../../../common/components/Table';
-import { PostEdgesType } from '../../../common/types';
+import { PostEdgesType, FormInputType } from '../../../common/types';
 import { MenuContext } from '../../../App';
 import { extractMessageFromError } from '../../../common/utils/Error';
+import { INITIAL_TEXT_FIELD } from '../../../common/constants/CommonConstants';
 
 const tableFields = [
   { name: 'id', label: 'ID' },
@@ -24,13 +25,18 @@ export const PostList = ({ history }: { history: any }): JSX.Element => {
 
   const [itemsPerPage, setItemsPerPage] = useState<number>(5);
   const [currentPage, setCurrentPage] = useState<number>(1);
+  const [users, setUsers] = useState<Array<any>>([]);
   const { loading, error, data, refetch } = useQuery(QUERY_POSTS, {
-    variables: { first: itemsPerPage, skip: (currentPage - 1) * itemsPerPage },
+    variables: {
+      first: itemsPerPage,
+      skip: (currentPage - 1) * itemsPerPage,
+      where: users && users.length ? { author: { id_in: users } } : null,
+    },
   });
   const [deleteUser] = useMutation(MUTATION_DELETE_POST);
 
   useEffect(() => {
-    if (history.location.state && history.location.state.refresh && data && data.usersConnection) {
+    if (history.location.state && history.location.state.refresh) {
       refetch();
     }
   }, [history, data, refetch]);
@@ -53,9 +59,6 @@ export const PostList = ({ history }: { history: any }): JSX.Element => {
       comments: node.commentsConnection.totalCount || '-',
     }));
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{`Error! ${error.message}`}</div>;
-
   const onDelete = (id: number) => () => {
     togglePopup({
       cb: async (onSuccess: any, onError: any) => {
@@ -72,24 +75,61 @@ export const PostList = ({ history }: { history: any }): JSX.Element => {
     });
   };
 
+  const getFilters = (): any => ({
+    user: {
+      ...INITIAL_TEXT_FIELD,
+      data: data && data.users ? data.users : [],
+      field: 'user',
+      label: 'User',
+      required: false,
+      value: '',
+      className: 'filter',
+      keys: [{ display: 'firstName', separator: ' ' }, { display: 'lastName' }],
+      idKey: 'id',
+    },
+  });
+
+  const onFilterChange = ({ form }: { form: { user: FormInputType } }) => {
+    let newUsers: Array<number> = [];
+    if (form.user.value && form.user.value.id && !users.includes(form.user.value.id)) {
+      newUsers = [form.user.value.id];
+    }
+    setUsers(newUsers);
+  };
+
   const generateLink = (id: number) => {
     return `/post/${id}/edit`;
   };
 
+  let edges = [];
+  let pageInfo = {
+    hasNextPage: false,
+    hasPreviousPage: false,
+  };
+  let totalCount = 0;
+  if (data && data.postsConnection && data.postsConnection.totalCount) {
+    edges = data.postsConnection.edges;
+    pageInfo = data.postsConnection.pageInfo;
+    totalCount = data.postsConnection.totalCount;
+  }
   return (
     <div>
       <Table
         currentPage={currentPage}
-        data={transformData(data.postsConnection.edges)}
+        data={transformData(edges)}
+        error={(error && error.toString()) || ''}
         fields={tableFields}
+        filters={getFilters()}
         itemsPerPage={itemsPerPage}
         link={generateLink}
+        loading={loading}
         name="Posts"
         goToPage={goToPage}
         onDelete={onDelete}
-        pageInfo={data.postsConnection.pageInfo}
-        totalCount={data.postsConnection.totalCount}
+        pageInfo={pageInfo}
+        totalCount={totalCount}
         setItemsPerPage={setItems}
+        onFilterChange={onFilterChange}
       />
     </div>
   );

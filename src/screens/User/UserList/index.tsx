@@ -28,7 +28,7 @@ export const UserList = ({ history }: { history: any }): JSX.Element => {
   const [deleteUser] = useMutation(MUTATION_DELETE_USER);
 
   useEffect(() => {
-    if (history && history.location.state && history.location.state.refresh && data && data.usersConnection) {
+    if (history && history.location.state && history.location.state.refresh) {
       refetch();
     }
   }, [history, data, refetch]);
@@ -72,21 +72,31 @@ export const UserList = ({ history }: { history: any }): JSX.Element => {
     return `/user/${id}/edit`;
   };
 
-  if (loading) return <div>Loading...</div>;
-  if (error) return <div>{`Error! ${error.message}`}</div>;
-
+  let edges = [];
+  let pageInfo = {
+    hasNextPage: false,
+    hasPreviousPage: false,
+  };
+  let totalCount = 0;
+  if (data && data.usersConnection && data.usersConnection.totalCount) {
+    edges = data.usersConnection.edges;
+    pageInfo = data.usersConnection.pageInfo;
+    totalCount = data.usersConnection.totalCount;
+  }
   return (
     <div>
       <Table
         currentPage={currentPage}
-        data={transformData(data.usersConnection.edges)}
+        data={transformData(edges)}
+        error={(error && error.toString()) || ''}
         fields={tableFields}
         itemsPerPage={itemsPerPage}
         link={generateLink}
+        loading={loading}
         name="Users"
         goToPage={goToPage}
-        pageInfo={data.usersConnection.pageInfo}
-        totalCount={data.usersConnection.totalCount}
+        pageInfo={pageInfo}
+        totalCount={totalCount}
         setItemsPerPage={setItems}
         onDelete={onUserDelete}
       />

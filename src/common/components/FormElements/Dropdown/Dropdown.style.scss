@@ -1,5 +1,6 @@
 .dropdown {
   margin-bottom: 1.6em;
+  min-width: 180px;
 
   &.dropdown--error {
     textarea {
@@ -27,7 +28,7 @@
     border: 1px solid #e3e3e3;
     font-size: 0.9em;
     padding: 0.6em 1em 0.8em;
-    min-width: 180px;
+    width: 100%;
     position: relative;
     cursor: pointer;
 

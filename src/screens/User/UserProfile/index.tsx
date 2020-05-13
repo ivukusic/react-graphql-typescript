@@ -96,12 +96,15 @@ const getInitialForm = (user: UserType | null, currentUser: UserType, edit?: boo
   if (!edit || currentUser.role === 'ADMIN') {
     form.role = {
       ...INITIAL_TEXT_FIELD,
-      data: ['ADMIN', 'EDITOR', 'USER'],
+      data: [{ role: 'ADMIN' }, { role: 'EDITOR' }, { role: 'USER' }],
+      // data: []
       field: 'role',
       label: 'Role',
+      keys: [{ display: 'role' }],
+      idKey: 'role',
       required: true,
       validators: [{ check: Validators.required, message: 'Field required' }],
-      value: (user && user.role) || 'USER',
+      value: user && user.role ? { role: user.role } : { role: 'USER' },
     };
     if (!edit) {
       form.password = {
@@ -163,7 +166,11 @@ export const UserProfile = ({ history }: { history: any }): JSX.Element => {
         arrayOfKeys.forEach((key: UserProfileFormKeysType) => {
           const formField = form && form[key];
           if (formField) {
-            dataToSend[key] = formField.value;
+            if (formField.idKey) {
+              dataToSend[key] = formField.value[formField.idKey];
+            } else {
+              dataToSend[key] = formField.value;
+            }
           }
         });
         let result: any;

@@ -9,9 +9,7 @@ const Dashboard = () => {
 
   return (
     <Container fluid className="flex-column align-items-center">
-      <Col sm={4}>
-        <UserCard user={data.currentUser} />
-      </Col>
+      <Col sm={4}>{data && data.currentUser && <UserCard user={data.currentUser} />}</Col>
     </Container>
   );
 };
