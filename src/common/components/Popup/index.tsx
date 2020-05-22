@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react';
 
 import { PopupType } from '../../types';
-import Button from '../Button';
+import { Button } from '../Button';
 
 import './Popup.style.scss';
 

@@ -1,9 +1,7 @@
 import React from 'react';
-import { Col, Container, Row } from 'reactstrap';
 
-import Button from '../../../common/components/Button';
-import Card from '../../../common/components/Card';
-import { UserProfileFormType } from '../../../common/types';
+import { Button, Card } from 'common/components';
+import { UserProfileFormType } from 'common/types';
 
 import './CreateEditProfile.style.scss';
 
@@ -35,31 +33,21 @@ const CreateEditProfile = ({
   return (
     <Card className="edit-profile">
       <h4>{title}</h4>
-      <Container fluid>
-        <Row>
-          <Col className="edit-profile__col" lg={4}>
-            {renderTextField('company')}
-          </Col>
-          <Col className="edit-profile__col">{renderTextField('email')}</Col>
-          {!edit && <Col className="edit-profile__col">{renderTextField('password')}</Col>}
-        </Row>
-        <Row>
-          <Col className="edit-profile__col">{renderTextField('firstName')}</Col>
-          <Col className="edit-profile__col">{renderTextField('lastName')}</Col>
-        </Row>
-        <Row>
-          <Col className="edit-profile__col">{renderTextField('address')}</Col>
-        </Row>
-        <Row>
-          <Col className="edit-profile__col">{renderTextField('city')}</Col>
-          <Col className="edit-profile__col">{renderTextField('country')}</Col>
-          <Col className="edit-profile__col">{renderTextField('postalCode')}</Col>
-        </Row>
-        {form.role && <Row>{renderDropdown('role')}</Row>}
-        <Row>
-          <Col className="edit-profile__col">{renderTextArea('description')}</Col>
-        </Row>
-      </Container>
+      <div className="container-fluid">
+        <div className="row">
+          <div className="col col-12 col-lg-4 edit-profile__col">{renderTextField('company')}</div>
+          <div className="col col-12 col-lg-4 edit-profile__col">{renderTextField('email')}</div>
+          {!edit && <div className="col col-12 col-lg-4 edit-profile__col">{renderTextField('password')}</div>}
+          <div className="col col-lg-6 edit-profile__col">{renderTextField('firstName')}</div>
+          <div className="col col-lg-6 edit-profile__col">{renderTextField('lastName')}</div>
+          <div className="col col-12 edit-profile__col">{renderTextField('address')}</div>
+          <div className="col col-md-4 edit-profile__col">{renderTextField('city')}</div>
+          <div className="col col-md-4 edit-profile__col">{renderTextField('country')}</div>
+          <div className="col col-md-4 edit-profile__col">{renderTextField('postalCode')}</div>
+          {form.role && renderDropdown('role')}
+          <div className="col col-12 edit-profile__col">{renderTextArea('description')}</div>
+        </div>
+      </div>
       {error && <div className="error-message mb-4">{error}</div>}
       {message && <div className="success-message mb-4">{message}</div>}
       <div>

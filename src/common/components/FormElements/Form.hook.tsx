@@ -1,11 +1,8 @@
 import { isEqual } from 'lodash';
 import React, { useEffect, useState, ChangeEvent, SyntheticEvent } from 'react';
 
+import { Checkbox, Dropdown, TextArea, TextField } from '..';
 import { checkValidity } from '../../utils/Validation';
-import Checkbox from './Checkbox';
-import Dropdown from './Dropdown';
-import TextArea from './TextArea';
-import TextField from './TextField';
 
 export const useForm = (fields: any, onFormChange?: any) => {
   const [initialForm, setInitialForm] = useState(fields);

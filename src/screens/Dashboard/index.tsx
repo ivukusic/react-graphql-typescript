@@ -1,17 +1,16 @@
 import React from 'react';
 import { useQuery } from 'react-apollo';
-import { Col, Container } from 'reactstrap';
 
-import { QUERY_CURRENT_USER } from '../../common/apollo/query/user.gql';
-import UserCard from '../../common/components/UserCard';
+import { QUERY_CURRENT_USER } from 'common/apollo/query/user.gql';
+import { UserCard } from 'common/components';
 
 const Dashboard = () => {
   const { data } = useQuery(QUERY_CURRENT_USER);
 
   return (
-    <Container fluid className="flex-column align-items-center">
-      <Col sm={4}>{data && data.currentUser && <UserCard user={data.currentUser} />}</Col>
-    </Container>
+    <div className="container-fluid flex-column align-items-center">
+      <div className="col col-lg-4">{data && data.currentUser && <UserCard user={data.currentUser} />}</div>
+    </div>
   );
 };
 

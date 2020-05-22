@@ -101,5 +101,3 @@ Dropdown.defaultProps = {
   required: false,
   type: 'text',
 };
-
-export default Dropdown;

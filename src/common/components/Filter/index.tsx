@@ -11,7 +11,7 @@ interface Props {
   onFilterChange?: any;
 }
 
-const Filter = ({ className, filters, onFilterChange }: Props): JSX.Element | null => {
+export const Filter = ({ className, filters, onFilterChange }: Props): JSX.Element | null => {
   const { renderDropdown } = useForm(filters, onFilterChange);
   if (!filters || !Object.keys(filters).length) {
     return null;
@@ -22,5 +22,3 @@ const Filter = ({ className, filters, onFilterChange }: Props): JSX.Element | nu
     </div>
   );
 };
-
-export default Filter;

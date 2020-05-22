@@ -29,5 +29,3 @@ Button.defaultProps = {
   loading: false,
   type: '',
 };
-
-export default Button;

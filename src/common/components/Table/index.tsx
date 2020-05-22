@@ -3,11 +3,8 @@ import { AiTwotoneDelete } from 'react-icons/ai';
 import { BsFilter } from 'react-icons/bs';
 import { Link } from 'react-router-dom';
 
+import { Card, Dropdown, Filter, Pagination } from '..';
 import { FormInputType } from '../../types';
-import Card from '../Card';
-import Filter from '../Filter';
-import Dropdown from '../FormElements/Dropdown';
-import Pagination from '../Pagination';
 
 import './Table.style.scss';
 

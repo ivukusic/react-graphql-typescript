@@ -1,16 +1,11 @@
 import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-apollo-hooks';
 import { useParams, withRouter } from 'react-router-dom';
-import { Col, Container, Row } from 'reactstrap';
 
-import { useForm } from '../../../common/components/FormElements/Form.hook';
-import UserCard from '../../../common/components/UserCard';
-import { INITIAL_TEXT_FIELD } from '../../../common/constants/CommonConstants';
-import { UserProfileFormKeysType, UserProfileFormType, UserType } from '../../../common/types';
-import { extractMessageFromError } from '../../../common/utils/Error';
-import { updateLocalStateUser } from '../../../common/utils/LocalState';
-import { validateForm } from '../../../common/utils/Validation';
-import { Validators } from '../../../common/utils/Validators';
+import { useForm, UserCard } from 'common/components';
+import { INITIAL_TEXT_FIELD } from 'common/constants';
+import { UserProfileFormKeysType, UserProfileFormType, UserType } from 'common/types';
+import { extractMessageFromError, updateLocalStateUser, validateForm, Validators } from 'common/utils';
 import CreateEditProfile from '../CreateEditProfile';
 import { MUTATION_CREATE_USER, MUTATION_UPDATE_USER, QUERY_USER, QUERY_USER_PROFILE } from './UserProfile.gql';
 
@@ -209,15 +204,15 @@ export const UserProfile = ({ history }: { history: any }): JSX.Element => {
   };
 
   return (
-    <Container fluid>
-      <Row>
+    <div className="container-fluid">
+      <div className="row">
         {userProfile && (
-          <Col lg={4} md={8}>
+          <div className="col col-12 col-xl-4 col-md-8">
             <UserCard user={currentUserData.currentUser} />
-          </Col>
+          </div>
         )}
         {form && !!Object.keys(form).length && (
-          <Col lg={8} md={12}>
+          <div className="col col-12 col-xl-8">
             <CreateEditProfile
               {...formData}
               edit={edit}
@@ -227,10 +222,10 @@ export const UserProfile = ({ history }: { history: any }): JSX.Element => {
               onSave={onSave}
               title={edit ? 'Edit profile' : 'Create profile'}
             />
-          </Col>
+          </div>
         )}
-      </Row>
-    </Container>
+      </div>
+    </div>
   );
 };
 

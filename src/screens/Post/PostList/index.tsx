@@ -4,11 +4,11 @@ import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from 'react-apollo-hooks';
 import { withRouter } from 'react-router-dom';
 
-import { MenuContext } from '../../../App';
-import Table from '../../../common/components/Table';
-import { INITIAL_TEXT_FIELD } from '../../../common/constants/CommonConstants';
-import { FormInputType, PostEdgesType } from '../../../common/types';
-import { extractMessageFromError } from '../../../common/utils/Error';
+import { MenuContext } from 'App';
+import { Table } from 'common/components';
+import { INITIAL_TEXT_FIELD } from 'common/constants';
+import { FormInputType, PostEdgesType } from 'common/types';
+import { extractMessageFromError } from 'common/utils';
 
 import { MUTATION_DELETE_POST, QUERY_POSTS } from './PostList.gql';
 

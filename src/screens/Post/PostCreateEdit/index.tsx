@@ -2,13 +2,9 @@ import React, { useEffect, useState } from 'react';
 import { useMutation, useQuery } from 'react-apollo-hooks';
 import { useParams, withRouter, RouteComponentProps } from 'react-router-dom';
 
-import Button from '../../../common/components/Button';
-import Card from '../../../common/components/Card';
-import { useForm } from '../../../common/components/FormElements/Form.hook';
-import { INITIAL_TEXT_FIELD } from '../../../common/constants/CommonConstants';
-import { extractMessageFromError } from '../../../common/utils/Error';
-import { validateForm } from '../../../common/utils/Validation';
-import { Validators } from '../../../common/utils/Validators';
+import { useForm, Button, Card } from 'common/components';
+import { INITIAL_TEXT_FIELD } from 'common/constants';
+import { extractMessageFromError, validateForm, Validators } from 'common/utils';
 import { MUTATION_CREATE_POST, MUTATION_UPDATE_POST, QUERY_POST } from './PostCreateEdit.gql';
 
 import './PostCreateEdit.style.scss';

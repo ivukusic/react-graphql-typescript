@@ -5,8 +5,6 @@ interface Props {
   children: any;
 }
 
-const Card = ({ className, children }: Props): JSX.Element => (
+export const Card = ({ className, children }: Props): JSX.Element => (
   <div className={`card${className ? ` ${className}` : ''}`}>{children}</div>
 );
-
-export default Card;

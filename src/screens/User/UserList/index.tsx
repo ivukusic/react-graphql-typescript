@@ -3,9 +3,9 @@ import dayjs from 'dayjs';
 import React, { useContext, useEffect, useState } from 'react';
 import { withRouter } from 'react-router-dom';
 
-import { MenuContext } from '../../../App';
-import Table from '../../../common/components/Table';
-import { extractMessageFromError } from '../../../common/utils/Error';
+import { MenuContext } from 'App';
+import { Table } from 'common/components';
+import { extractMessageFromError } from 'common/utils';
 import { MUTATION_DELETE_USER, QUERY_USERS } from './UserList.gql';
 
 const tableFields = [

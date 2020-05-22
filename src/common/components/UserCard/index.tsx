@@ -1,8 +1,8 @@
 import React from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
 
+import { Card } from '..';
 import { UserType } from '../../types';
-import Card from '../Card';
 
 import './UserCard.style.scss';
 

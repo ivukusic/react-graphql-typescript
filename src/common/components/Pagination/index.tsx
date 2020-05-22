@@ -50,5 +50,3 @@ export const Pagination = ({ current, goToPage, itemsPerPage, pageInfo, totalCou
     </div>
   );
 };
-
-export default Pagination;

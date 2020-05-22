@@ -3,20 +3,17 @@ import { ApolloProvider } from 'react-apollo';
 import { ApolloProvider as ApolloHooksProvider } from 'react-apollo-hooks';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 
-import ApolloWrapper from './core/Apollo';
-import Dashboard from './screens/Dashboard';
-import Login from './screens/Login';
-import PostCreateEdit from './screens/Post/PostCreateEdit';
-import PostList from './screens/Post/PostList';
-import UserList from './screens/User/UserList';
-import UserProfile from './screens/User/UserProfile';
-
-import { QUERY_CURRENT_USER } from './common/apollo/query/user.gql';
-import Header from './common/components/Header';
-import { Popup } from './common/components/Popup';
-import Sidebar from './common/components/Sidebar';
-import { PopupType, UserType } from './common/types';
-import routes from './core/Routes';
+import { QUERY_CURRENT_USER } from 'common/apollo/query/user.gql';
+import { Header, Popup, Sidebar } from 'common/components';
+import { PopupType, UserType } from 'common/types';
+import ApolloWrapper from 'core/Apollo';
+import routes from 'core/Routes';
+import Dashboard from 'screens/Dashboard';
+import Login from 'screens/Login';
+import PostCreateEdit from 'screens/Post/PostCreateEdit';
+import PostList from 'screens/Post/PostList';
+import UserList from 'screens/User/UserList';
+import UserProfile from 'screens/User/UserProfile';
 
 export const MenuContext = React.createContext<any>({
   title: 'Dashboard',
