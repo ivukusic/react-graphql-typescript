@@ -11,3 +11,11 @@ export const extractMessageFromError = (graphQLErrors: any) => {
   }
   return capitalize(message);
 };
+
+export const checkError = (error?: string): string => {
+  let newError = error || '';
+  if (error && error.includes('Unauthorized')) {
+    newError = 'You are not authorized for current route and will be redirected to login screen.';
+  }
+  return newError;
+};

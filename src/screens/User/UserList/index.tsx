@@ -5,7 +5,7 @@ import { withRouter } from 'react-router-dom';
 
 import { MenuContext } from 'App';
 import { Table } from 'common/components';
-import { extractMessageFromError } from 'common/utils';
+import { checkError, extractMessageFromError } from 'common/utils';
 import { MUTATION_DELETE_USER, QUERY_USERS } from './UserList.gql';
 
 const tableFields = [
@@ -82,12 +82,13 @@ export const UserList = ({ history }: { history: any }): JSX.Element => {
     pageInfo = data.usersConnection.pageInfo;
     totalCount = data.usersConnection.totalCount;
   }
+  const prettyError = checkError(error && error.toString());
   return (
     <div>
       <Table
         currentPage={currentPage}
         data={transformData(edges)}
-        error={(error && error.toString()) || ''}
+        error={prettyError}
         fields={tableFields}
         itemsPerPage={itemsPerPage}
         link={generateLink}

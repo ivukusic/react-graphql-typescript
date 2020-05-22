@@ -2,7 +2,7 @@
 import ApolloClient from 'apollo-boost';
 
 import { IDENTIFIERS } from 'common/constants';
-import { getStorageItem, removeStorageItem, setStorageItem } from 'common/utils';
+import { getStorageItem, removeStorageItem, resetLocalStateUser, setStorageItem } from 'common/utils';
 
 export const INITIAL_USER = {
   id: null,
@@ -49,6 +49,12 @@ class ApolloWrapper {
       onError: ({ networkError, graphQLErrors }) => {
         console.log('graphQLErrors', graphQLErrors);
         console.log('networkError', networkError);
+        if (graphQLErrors && graphQLErrors[0] && graphQLErrors[0].message === 'Unauthorized') {
+          resetLocalStateUser();
+          setTimeout(() => {
+            window.location.href = 'http://localhost:3000/';
+          }, 1000);
+        }
       },
       request: async operation => {
         if (that.token) {

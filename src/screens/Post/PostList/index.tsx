@@ -8,7 +8,7 @@ import { MenuContext } from 'App';
 import { Table } from 'common/components';
 import { INITIAL_TEXT_FIELD } from 'common/constants';
 import { FormInputType, PostEdgesType } from 'common/types';
-import { extractMessageFromError } from 'common/utils';
+import { checkError, extractMessageFromError } from 'common/utils';
 
 import { MUTATION_DELETE_POST, QUERY_POSTS } from './PostList.gql';
 
@@ -113,12 +113,13 @@ export const PostList = ({ history }: { history: any }): JSX.Element => {
     pageInfo = data.postsConnection.pageInfo;
     totalCount = data.postsConnection.totalCount;
   }
+  const prettyError = checkError(error && error.toString());
   return (
     <div>
       <Table
         currentPage={currentPage}
         data={transformData(edges)}
-        error={(error && error.toString()) || ''}
+        error={prettyError}
         fields={tableFields}
         filters={getFilters()}
         itemsPerPage={itemsPerPage}
