@@ -1,8 +1,9 @@
 import React, { useEffect, useState } from 'react';
 
-import './Popup.style.scss';
-import Button from '../Button';
 import { PopupType } from '../../types';
+import Button from '../Button';
+
+import './Popup.style.scss';
 
 interface Props {
   popup: PopupType;

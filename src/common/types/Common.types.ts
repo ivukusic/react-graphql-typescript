@@ -1,5 +1,5 @@
 export interface PopupType {
-  cb?: Function | null;
+  cb?: any;
   message: string;
   title: string;
   visible?: boolean;
@@ -7,7 +7,7 @@ export interface PopupType {
 
 export interface PageInfoType {
   hasNextPage: boolean;
-  hasPreviousPage: Boolean;
-  startCursor: String;
-  endCursor: String;
+  hasPreviousPage: boolean;
+  startCursor: string;
+  endCursor: string;
 }

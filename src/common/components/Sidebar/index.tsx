@@ -1,7 +1,7 @@
 import React, { useState, SyntheticEvent } from 'react';
-import { AiOutlineBank, AiOutlineUser, AiOutlinePushpin } from 'react-icons/ai';
-import { Link, withRouter, RouteComponentProps } from 'react-router-dom';
+import { AiOutlineBank, AiOutlinePushpin, AiOutlineUser } from 'react-icons/ai';
 import { MdKeyboardArrowLeft } from 'react-icons/md';
+import { withRouter, Link, RouteComponentProps } from 'react-router-dom';
 
 import logo from '../../../resources/images/NORDIT - logo_white.png';
 

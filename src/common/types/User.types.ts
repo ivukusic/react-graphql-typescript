@@ -1,5 +1,5 @@
-import { PostConnectionType, PostType } from './Post.types';
 import { CommentConnectionType } from './Comment.types';
+import { PostConnectionType, PostType } from './Post.types';
 
 export interface UserType {
   id: number;

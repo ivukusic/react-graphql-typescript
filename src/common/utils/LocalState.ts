@@ -1,7 +1,8 @@
 import gql from 'graphql-tag';
+
 import ApolloWrapper from '../../core/Apollo';
-import { setStorageItem } from './Storage';
 import { USER_FRAGMENT } from '../apollo/fragments/user.gql';
+import { setStorageItem } from './Storage';
 
 /**
  * mutations for updating local state currentUser
@@ -26,7 +27,7 @@ export const RESET_USER_ID = gql`
     resetUser @client
   }
 `;
-export const createLocalStateUser = async (user: Object, token: string) => {
+export const createLocalStateUser = async (user: object, token: string) => {
   ApolloWrapper.setToken(token);
   await setStorageItem('currentUser', JSON.stringify({ ...user, __typename: 'User' }));
   await ApolloWrapper.client.mutate({
@@ -35,7 +36,7 @@ export const createLocalStateUser = async (user: Object, token: string) => {
   });
 };
 
-export const updateLocalStateUser = async (additionalData: Object) => {
+export const updateLocalStateUser = async (additionalData: object) => {
   const { data } = await ApolloWrapper.client.query({ query: READ_LOCAL_PERSON });
   if (data && data.currentUser && data.currentUser.id) {
     const newUser = { ...data.currentUser, ...additionalData };

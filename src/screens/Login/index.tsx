@@ -1,22 +1,22 @@
 import React, { useState, ChangeEvent } from 'react';
 import { useMutation } from 'react-apollo-hooks';
 import { FaFacebookF, FaGoogle, FaTwitter } from 'react-icons/fa';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
 import Button from '../../common/components/Button';
 import Card from '../../common/components/Card';
 import TextField from '../../common/components/FormElements/TextField';
-import logo from '../../resources/images/NORDIT - logo.png';
-
-import './Login.style.scss';
-import { MUTATION_LOGIN } from './Login.gql';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
-import routes from '../../core/Routes';
-import { createLocalStateUser } from '../../common/utils/LocalState';
 import { INITIAL_TEXT_FIELD } from '../../common/constants/CommonConstants';
-import { Validators } from '../../common/utils/Validators';
-import { validateForm, checkValidity } from '../../common/utils/Validation';
 import { UserType } from '../../common/types';
 import { extractMessageFromError } from '../../common/utils/Error';
+import { createLocalStateUser } from '../../common/utils/LocalState';
+import { checkValidity, validateForm } from '../../common/utils/Validation';
+import { Validators } from '../../common/utils/Validators';
+import routes from '../../core/Routes';
+import logo from '../../resources/images/NORDIT - logo.png';
+import { MUTATION_LOGIN } from './Login.gql';
+
+import './Login.style.scss';
 
 interface Props extends RouteComponentProps {
   showSidebar: () => void;

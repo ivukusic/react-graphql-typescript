@@ -1,11 +1,11 @@
-import React, { useEffect, useState, ChangeEvent, SyntheticEvent } from 'react';
 import { isEqual } from 'lodash';
+import React, { useEffect, useState, ChangeEvent, SyntheticEvent } from 'react';
 
 import { checkValidity } from '../../utils/Validation';
-import TextField from './TextField';
-import TextArea from './TextArea';
-import Dropdown from './Dropdown';
 import Checkbox from './Checkbox';
+import Dropdown from './Dropdown';
+import TextArea from './TextArea';
+import TextField from './TextField';
 
 export const useForm = (fields: any, onFormChange?: any) => {
   const [initialForm, setInitialForm] = useState(fields);
@@ -19,7 +19,7 @@ export const useForm = (fields: any, onFormChange?: any) => {
   }, [initialForm, fields]);
 
   const onChange = (field: string) => (e: ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) => {
-    let formField = form && form[field];
+    const formField = form && form[field];
     if (formField) {
       let error = formField.error;
       if (error) {
@@ -34,7 +34,7 @@ export const useForm = (fields: any, onFormChange?: any) => {
   };
 
   const onCheckbox = (field: string) => (e: SyntheticEvent) => {
-    let formField = form && form[field];
+    const formField = form && form[field];
     if (formField) {
       let error = formField.error;
       if (error) {
@@ -48,7 +48,7 @@ export const useForm = (fields: any, onFormChange?: any) => {
   };
 
   const onSelect = (field: string) => (value: any) => {
-    let formField = form && form[field];
+    const formField = form && form[field];
     if (formField) {
       let error = formField.error;
       if (error) {
@@ -62,7 +62,7 @@ export const useForm = (fields: any, onFormChange?: any) => {
   };
 
   const renderTextField = (field: string): JSX.Element | null => {
-    let formField = form && form[field];
+    const formField = form && form[field];
     if (!formField) {
       return <div />;
     }
@@ -80,7 +80,7 @@ export const useForm = (fields: any, onFormChange?: any) => {
   };
 
   const renderTextArea = (field: string): JSX.Element | null => {
-    let formField = form && form[field];
+    const formField = form && form[field];
     if (!formField) {
       return <div />;
     }
@@ -98,7 +98,7 @@ export const useForm = (fields: any, onFormChange?: any) => {
   };
 
   const renderDropdown = (field: string) => {
-    let formField = form && form[field];
+    const formField = form && form[field];
     if (!formField) {
       return <div />;
     }
@@ -120,7 +120,7 @@ export const useForm = (fields: any, onFormChange?: any) => {
   };
 
   const renderCheckbox = (field: string) => {
-    let formField = form && form[field];
+    const formField = form && form[field];
     if (!formField) {
       return <div />;
     }

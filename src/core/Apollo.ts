@@ -1,7 +1,8 @@
+// tslint:disable: no-console
 import ApolloClient from 'apollo-boost';
 
-import { getStorageItem, removeStorageItem, setStorageItem } from '../common/utils/Storage';
 import { IDENTIFIERS } from '../common/constants/Identifiers';
+import { getStorageItem, removeStorageItem, setStorageItem } from '../common/utils/Storage';
 
 export const INITIAL_USER = {
   id: null,

@@ -5,12 +5,12 @@ import './Dropdown.style.scss';
 
 interface Props {
   className?: string;
-  data: Array<any>;
+  data: any[];
   disabled?: boolean;
   error: string;
   field?: string;
   idKey: string;
-  keys: Array<{ display: string; separator?: string }>;
+  keys: { display: string; separator?: string }[];
   label?: string;
   onSelect: (value: any) => void;
   placeholderClassName?: string;

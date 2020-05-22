@@ -2,12 +2,12 @@ import { Validator } from './Validators.types';
 
 export interface FormInputType {
   className?: string;
-  data?: Array<any>;
+  data?: any[];
   disabled: boolean;
   error?: { error: boolean; message: string } | null;
   field: string;
   label: string;
-  keys?: Array<{ display: string; separator?: string }>;
+  keys?: { display: string; separator?: string }[];
   idKey?: string;
   isValid: boolean;
   multiline: boolean;

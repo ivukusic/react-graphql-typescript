@@ -1,12 +1,12 @@
 import React, { useState } from 'react';
-import { withRouter, RouteComponentProps } from 'react-router-dom';
 import { AiOutlineMenu } from 'react-icons/ai';
+import { withRouter, RouteComponentProps } from 'react-router-dom';
 
+import { resetLocalStateUser } from '../../utils/LocalState';
 import MenuIcon from '../MenuIcon';
 import Search from '../Search';
 
 import './Header.style.scss';
-import { resetLocalStateUser } from '../../utils/LocalState';
 
 interface Props extends RouteComponentProps {
   openSidebar: () => void;

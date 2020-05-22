@@ -1,14 +1,14 @@
 import React from 'react';
 import { AiOutlineUser } from 'react-icons/ai';
 
-import Card from '../Card';
 import { UserType } from '../../types';
+import Card from '../Card';
 
 import './UserCard.style.scss';
 
 export const UserCard = ({ user }: { user: UserType }): JSX.Element => (
   <Card className="user-profile mb-4">
-    <div className="user-profile__header"></div>
+    <div className="user-profile__header" />
     <div className="user-profile__image">
       <AiOutlineUser size={40} color="darkgray" />
     </div>

@@ -1,8 +1,8 @@
 import React from 'react';
-import { Container, Col, Row } from 'reactstrap';
+import { Col, Container, Row } from 'reactstrap';
 
-import Card from '../../../common/components/Card';
 import Button from '../../../common/components/Button';
+import Card from '../../../common/components/Card';
 import { UserProfileFormType } from '../../../common/types';
 
 import './CreateEditProfile.style.scss';

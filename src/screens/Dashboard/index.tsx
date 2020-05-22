@@ -1,8 +1,9 @@
 import React from 'react';
-import UserCard from '../../common/components/UserCard';
 import { useQuery } from 'react-apollo';
+import { Col, Container } from 'reactstrap';
+
 import { QUERY_CURRENT_USER } from '../../common/apollo/query/user.gql';
-import { Container, Col } from 'reactstrap';
+import UserCard from '../../common/components/UserCard';
 
 const Dashboard = () => {
   const { data } = useQuery(QUERY_CURRENT_USER);

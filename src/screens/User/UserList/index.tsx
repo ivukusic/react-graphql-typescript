@@ -1,12 +1,12 @@
-import React, { useContext, useEffect, useState } from 'react';
-import { useQuery, useMutation } from '@apollo/react-hooks';
-import { withRouter } from 'react-router-dom';
+import { useMutation, useQuery } from '@apollo/react-hooks';
 import dayjs from 'dayjs';
+import React, { useContext, useEffect, useState } from 'react';
+import { withRouter } from 'react-router-dom';
 
-import { QUERY_USERS, MUTATION_DELETE_USER } from './UserList.gql';
-import Table from '../../../common/components/Table';
 import { MenuContext } from '../../../App';
+import Table from '../../../common/components/Table';
 import { extractMessageFromError } from '../../../common/utils/Error';
+import { MUTATION_DELETE_USER, QUERY_USERS } from './UserList.gql';
 
 const tableFields = [
   { name: 'id', label: 'ID' },
@@ -50,8 +50,7 @@ export const UserList = ({ history }: { history: any }): JSX.Element => {
           refetch();
           success();
         } catch ({ graphQLErrors }) {
-          let errorMessage = extractMessageFromError(graphQLErrors);
-          error(errorMessage);
+          error(extractMessageFromError(graphQLErrors));
         }
       },
       title: 'Delete user',

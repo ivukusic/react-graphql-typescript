@@ -1,18 +1,18 @@
 import React, { useEffect, useState } from 'react';
-import { Container, Row, Col } from 'reactstrap';
-import { useQuery, useMutation } from 'react-apollo-hooks';
-import { withRouter, useParams } from 'react-router-dom';
+import { useMutation, useQuery } from 'react-apollo-hooks';
+import { useParams, withRouter } from 'react-router-dom';
+import { Col, Container, Row } from 'reactstrap';
 
-import { QUERY_USER_PROFILE, QUERY_USER, MUTATION_CREATE_USER, MUTATION_UPDATE_USER } from './UserProfile.gql';
-import { Validators } from '../../../common/utils/Validators';
-import { validateForm } from '../../../common/utils/Validation';
-import { updateLocalStateUser } from '../../../common/utils/LocalState';
-import { INITIAL_TEXT_FIELD } from '../../../common/constants/CommonConstants';
-import CreateEditProfile from '../CreateEditProfile';
-import { UserProfileFormType, UserProfileFormKeysType, UserType } from '../../../common/types';
 import { useForm } from '../../../common/components/FormElements/Form.hook';
-import { extractMessageFromError } from '../../../common/utils/Error';
 import UserCard from '../../../common/components/UserCard';
+import { INITIAL_TEXT_FIELD } from '../../../common/constants/CommonConstants';
+import { UserProfileFormKeysType, UserProfileFormType, UserType } from '../../../common/types';
+import { extractMessageFromError } from '../../../common/utils/Error';
+import { updateLocalStateUser } from '../../../common/utils/LocalState';
+import { validateForm } from '../../../common/utils/Validation';
+import { Validators } from '../../../common/utils/Validators';
+import CreateEditProfile from '../CreateEditProfile';
+import { MUTATION_CREATE_USER, MUTATION_UPDATE_USER, QUERY_USER, QUERY_USER_PROFILE } from './UserProfile.gql';
 
 const getInitialForm = (user: UserType | null, currentUser: UserType, edit?: boolean): UserProfileFormType => {
   const form: UserProfileFormType = {
@@ -121,17 +121,17 @@ const getInitialForm = (user: UserType | null, currentUser: UserType, edit?: boo
 };
 
 export const UserProfile = ({ history }: { history: any }): JSX.Element => {
-  let { id } = useParams();
+  const { id } = useParams();
 
   const edit = history.location.pathname.includes('user-profile') || !!id;
   const userProfile = history.location.pathname.includes('user-profile');
 
-  let { data: currentUserData } = useQuery<any>(QUERY_USER_PROFILE);
+  const { data: currentUserData } = useQuery<any>(QUERY_USER_PROFILE);
   let queryId = id ? parseInt(id, 10) : 0;
   if (userProfile) {
     queryId = currentUserData.currentUser.id;
   }
-  let { data: newData } = useQuery<any>(QUERY_USER, { variables: { where: { id: queryId } } });
+  const { data: newData } = useQuery<any>(QUERY_USER, { variables: { where: { id: queryId } } });
   const user = (newData && newData.user) || {};
 
   const [createUser] = useMutation(MUTATION_CREATE_USER);

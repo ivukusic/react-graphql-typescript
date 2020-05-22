@@ -1,15 +1,16 @@
-import React, { useContext, useEffect, useState } from 'react';
 import { useQuery } from '@apollo/react-hooks';
 import dayjs from 'dayjs';
+import React, { useContext, useEffect, useState } from 'react';
 import { useMutation } from 'react-apollo-hooks';
 import { withRouter } from 'react-router-dom';
 
-import { QUERY_POSTS, MUTATION_DELETE_POST } from './PostList.gql';
-import Table from '../../../common/components/Table';
-import { PostEdgesType, FormInputType } from '../../../common/types';
 import { MenuContext } from '../../../App';
-import { extractMessageFromError } from '../../../common/utils/Error';
+import Table from '../../../common/components/Table';
 import { INITIAL_TEXT_FIELD } from '../../../common/constants/CommonConstants';
+import { FormInputType, PostEdgesType } from '../../../common/types';
+import { extractMessageFromError } from '../../../common/utils/Error';
+
+import { MUTATION_DELETE_POST, QUERY_POSTS } from './PostList.gql';
 
 const tableFields = [
   { name: 'id', label: 'ID' },
@@ -25,7 +26,7 @@ export const PostList = ({ history }: { history: any }): JSX.Element => {
 
   const [itemsPerPage, setItemsPerPage] = useState<number>(5);
   const [currentPage, setCurrentPage] = useState<number>(1);
-  const [users, setUsers] = useState<Array<any>>([]);
+  const [users, setUsers] = useState<any[]>([]);
   const { loading, error, data, refetch } = useQuery(QUERY_POSTS, {
     variables: {
       first: itemsPerPage,
@@ -50,7 +51,7 @@ export const PostList = ({ history }: { history: any }): JSX.Element => {
     setItemsPerPage(value);
   };
 
-  const transformData = (data: Array<PostEdgesType>): Array<PostEdgesType> =>
+  const transformData = (data: PostEdgesType[]): PostEdgesType[] =>
     data.map(({ node }: any) => ({
       ...node,
       author: `${node.author.firstName} ${node.author.lastName}`,
@@ -90,7 +91,7 @@ export const PostList = ({ history }: { history: any }): JSX.Element => {
   });
 
   const onFilterChange = ({ form }: { form: { user: FormInputType } }) => {
-    let newUsers: Array<number> = [];
+    let newUsers: number[] = [];
     if (form.user.value && form.user.value.id && !users.includes(form.user.value.id)) {
       newUsers = [form.user.value.id];
     }

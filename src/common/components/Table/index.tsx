@@ -1,15 +1,15 @@
 import React, { useState } from 'react';
 import { AiTwotoneDelete } from 'react-icons/ai';
-import { Link } from 'react-router-dom';
 import { BsFilter } from 'react-icons/bs';
+import { Link } from 'react-router-dom';
 
+import { FormInputType } from '../../types';
 import Card from '../Card';
+import Filter from '../Filter';
 import Dropdown from '../FormElements/Dropdown';
 import Pagination from '../Pagination';
 
 import './Table.style.scss';
-import Filter from '../Filter';
-import { FormInputType } from '../../types';
 
 type Field = {
   name: string;
@@ -23,9 +23,9 @@ type PageInfoType = {
 
 interface Props {
   currentPage: number;
-  data: Array<any>;
+  data: any[];
   error?: string;
-  filters?: Array<{ string: FormInputType }>;
+  filters?: { string: FormInputType }[];
   totalCount: number;
   pageInfo: PageInfoType;
   link?: (id: number) => string;

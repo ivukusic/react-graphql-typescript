@@ -1,12 +1,13 @@
 import React from 'react';
-import { useForm } from '../FormElements/Form.hook';
+
 import { FormInputType } from '../../types';
+import { useForm } from '../FormElements/Form.hook';
 
 import './Filter.style.scss';
 
 interface Props {
   className?: string;
-  filters?: Array<{ string: FormInputType }>;
+  filters?: { string: FormInputType }[];
   onFilterChange?: any;
 }
 

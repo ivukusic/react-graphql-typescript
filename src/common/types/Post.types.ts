@@ -1,14 +1,14 @@
+import { CommentConnectionType, CommentType } from './Comment.types';
 import { PageInfoType } from './Common.types';
-import { CommentType, CommentConnectionType } from './Comment.types';
 import { UserType } from './User.types';
 
 export interface PostType {
   id: number;
-  title: String;
-  body: String;
-  published: Boolean;
+  title: string;
+  body: string;
+  published: boolean;
   author: UserType;
-  comments: Array<CommentType>;
+  comments: CommentType[];
   createdAt: string;
   updatedAt: string;
   commentsConnection: CommentConnectionType;
@@ -22,5 +22,5 @@ export interface PostEdgesType {
 export interface PostConnectionType {
   totalCount: number;
   pageInfo: PageInfoType;
-  edges: Array<PostEdgesType>;
+  edges: PostEdgesType[];
 }
